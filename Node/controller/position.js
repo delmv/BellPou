@@ -21,6 +21,22 @@ module.exports.getPosition = async (req, res) => {
     
 }
 
+module.exports.getPositions = async (req, res) => {
+    
+    try{
+        const positions = await Position.findAll();
+            if(positions !== null){
+                res.json(positions);
+            } else {
+                res.sendStatus(404);
+            }
+    } catch (error){
+        console.error(error);
+        res.sendStatus(500);
+    }
+    
+}
+
 module.exports.postPosition = async(req,res) =>{
     const body = req.body;
     const {coordinate_x,coordinate_y} = body;
