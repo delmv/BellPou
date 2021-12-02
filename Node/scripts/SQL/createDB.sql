@@ -35,11 +35,20 @@ CREATE TABLE client (
     last_name varchar(30) NOT NULL, 
     birth_date date NOT NULL, 
     nb_throins integer NOT NULL DEFAULT 0, 
-    email varchar(100) NOT NULL, 
-    mdp varchar(50) NOT NULL, 
+    email varchar(100) NOT NULL UNIQUE, 
+    password varchar NOT NULL, 
     nb_bad_reports integer NOT NULL DEFAULT 0, 
-    is_banned bool NOT NULL DEFAULT false, 
-    is_admin bool NOT NULL DEFAULT false
+    is_banned bool NOT NULL DEFAULT false
+    );
+
+DROP TABLE IF EXISTS manager CASCADE;
+CREATE TABLE manager (
+    id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    first_name varchar(30) NOT NULL, 
+    last_name varchar(30) NOT NULL, 
+    birth_date date NOT NULL, 
+    email varchar(100) NOT NULL UNIQUE, 
+    password varchar NOT NULL 
     );
 
 DROP TABLE IF EXISTS vendor CASCADE;
@@ -83,10 +92,16 @@ DROP TABLE IF EXISTS Vendor CASCADE; */
 
 -- Insert
 
-INSERT INTO client(first_name, last_name, birth_date, email, mdp)
-VALUES('Isaline','Dider','2000-04-14','isaline.didier@outlook.com','isa'),
+INSERT INTO client(first_name, last_name, birth_date, email, password)
+VALUES('User','USER','2000-04-14','user@outlook.com','$2a$10$vQ1rrXjoPNYhualYPfWlFec41p3JpSQH33B4VwXEyeaUTKmoF4VSy'), --motdepasse
 ('John','Doe','1900-04-14','john.doe@outlook.com','jj'),
 ('Jean','Pierree','1900-08-14','jean.pierre@outlook.com','jp');
 
+INSERT into manager(first_name, last_name, birth_date, email, password)
+VALUES('Manager','MANAGER','1999-05-08','manager@outlook.com','$2a$10$fiKILzSQn2YvA.mbmxhqa.7f8pErrnl4qofZY7nE/a5Vq8KakfPKG'); --password
+
 INSERT INTO position(coordinate_x, coordinate_y)
 VALUES(10,20),(20,30),(40,50),(60,70);
+
+INSERT into trash(position_id)
+VALUES(1);
