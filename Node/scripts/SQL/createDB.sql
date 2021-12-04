@@ -101,7 +101,7 @@ INSERT into manager(first_name, last_name, birth_date, email, password)
 VALUES('Manager','MANAGER','1999-05-08','manager@outlook.com','$2a$10$fiKILzSQn2YvA.mbmxhqa.7f8pErrnl4qofZY7nE/a5Vq8KakfPKG'); --password
 
 INSERT INTO position(coordinate_x, coordinate_y)
-VALUES(10,20),(20,30),(40,50),(60,70);
+VALUES(50.4709020054474, 4.855681660495311),(50.46962242576424, 4.855643728330823),(50.472316745691465, 4.856349266590292),(50.47165042279585, 4.854407139768528);
 
 INSERT into trash(position_id)
 VALUES(1);
