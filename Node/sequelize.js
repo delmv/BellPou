@@ -6,7 +6,7 @@ const sequelize = new Sequelize(process.env.DB_DATABASEE, process.env.DB_USER, p
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     dialect: 'postgres',
-    omitNull: true
+    omitNull: true,
 });
 
 module.exports = sequelize;

@@ -6,12 +6,12 @@ const Router = require("express-promise-router");
 const router = new Router();
 
 router.get(
-  '/',
+  '/:id',
   IdMiddleware.identification,
   PersonalRewardController.findOne
 );
 router.get(
-  '/all',
+  '/',
   IdMiddleware.identification,
   PersonalRewardController.findAll
 );

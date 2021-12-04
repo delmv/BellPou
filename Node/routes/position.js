@@ -3,9 +3,10 @@ const IdMiddleware = require("../middlewares/Identification.js");
 const AuthoMiddleware = require("../middlewares/Authorization");
 
 const Router = require("express-promise-router");
+const { is } = require("sequelize/dist/lib/operators");
 const router = new Router();
 
-router.get('/', PositionController.findOne);
+router.get('/id:', PositionController.findOne);
 router.post(
   '/',
   IdMiddleware.identification,
@@ -19,7 +20,7 @@ router.delete(
   PositionController.destroy
 );
 router.get(
-  '/all',
+  '/',
   IdMiddleware.identification,
   AuthoMiddleware.mustBeManager,
   PositionController.findAll

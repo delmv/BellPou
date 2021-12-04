@@ -5,8 +5,8 @@ const AuthoMiddleware = require("../middlewares/Authorization");
 const Router = require("express-promise-router");
 const router = new Router();
 
-router.get('/', VendorController.findOne);
-router.get('/all', VendorController.findAll);
+router.get('/id:', VendorController.findOne);
+router.get('/', VendorController.findAll);
 router.post(
   '/',
   IdMiddleware.identification,

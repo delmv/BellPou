@@ -6,7 +6,7 @@ const Router = require("express-promise-router");
 const router = new Router();
 
 router.get(
-  '/all',
+  '/',
   IdMiddleware.identification,
   AuthoMiddleware.mustBeManager,
   ClientController.findAll

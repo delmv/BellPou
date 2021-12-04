@@ -5,8 +5,8 @@ const AuthoMiddleware = require("../middlewares/Authorization");
 const Router = require("express-promise-router");
 const router = new Router();
 
-router.get('/', TrashController.findOne);
-router.get('/all', TrashController.findAll);
+router.get('/:id', TrashController.findOne);
+router.get('/', TrashController.findAll);
 router.post(
   '/',
   IdMiddleware.identification,

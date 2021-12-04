@@ -3,12 +3,17 @@ const Trash = require("../models/Trash");
 
 const sequelize = require("../sequelize");
 const { Sequelize } = require("sequelize");
+const { raw } = require("body-parser");
 
 module.exports.findAll = async (req, res) => {
   try {
-    const trash = await Trash.findAll();
-    if (rewards.length != 0) {
-      res.json(trash);
+    const trashs = await Trash.findAll({
+      include: [Position]
+    });
+
+    if (trashs.length != 0) {
+
+      res.json(trashs);
     } else {
       res.sendStatus(204);
     }
@@ -19,12 +24,15 @@ module.exports.findAll = async (req, res) => {
 };
 
 module.exports.findOne = async (req, res) => {
-  const { id } = req.body;
+  const idTexte = req.params.id; //attention ! Il s'agit de texte !
+  const id = parseInt(idTexte);
   try {
     if (isNaN(id)) {
       res.sendStatus(400);
     } else {
-      const trash = await Trash.findByPk(id);
+      const trash = await Trash.findByPk(id, {
+        include: [Position]
+      });
       if (trash !== null) {
         res.json(trash);
       } else {

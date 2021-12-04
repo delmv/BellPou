@@ -6,7 +6,8 @@ const { Sequelize } = require("sequelize");
 const Position = require("../models/Position");
 
 module.exports.findOne = async (req, res) => {
-  const { id } = req.body;
+  const idTexte = req.params.id; //attention ! Il s'agit de texte !
+  const id = parseInt(idTexte);
   try {
     if (isNaN(id)) {
       res.sendStatus(400);

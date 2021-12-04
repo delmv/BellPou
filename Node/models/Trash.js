@@ -24,20 +24,19 @@ const Trash = sequelize.define(
       type: DataTypes.DATE,
       defaultValue: null,
     },
-    position_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: Position,
-        key: "id",
-        deferrable: Deferrable.INITIALLY_IMMEDIATE,
-      },
-    },
   },
   {
     timestamps: false,
     freezeTableName: true,
   }
 );
-
+Trash.belongsTo(Position, {
+  foreignKey: {
+    name: 'position_id',
+    type: DataTypes.INTEGER,
+    allowNull: false
+  },
+  onDelete: 'CASCCADE'
+});
 module.exports = Trash;
+
