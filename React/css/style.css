@@ -1,0 +1,65 @@
+body {
+    margin: 0;
+    font-family: 'Mochiy Pop P One', Helvetica;
+    background-color: #f2fff4;
+}
+
+#header {
+    display: flex;
+    height: 150px;
+}
+
+#navbar {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+#navbar table {
+    border: 1px solid black;
+    border-radius: 10px / 10px;
+    padding: 5px;
+}
+
+#navbar table td {
+    border: 0px solid black;
+    border-radius: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    transition: border-width 0.1s linear;
+    transition: background-color 0.1s linear;
+}
+
+#navbar table td:hover {
+    border-width: 2px;
+    background-color: #2C9356;
+}
+
+.headerBox {
+    width: calc(100% / 3);
+}
+
+.headerBox > img {
+    margin-top: 30px;
+    height: 90px;
+}
+
+.headerBox > h1 {
+    text-align: center;
+    font-family: 'selima', sans-serif;
+    font-size: 4em;
+    color: #2C9356;
+}
+
+.headerBox > ul {
+    margin-top: 30px;
+    text-align: right;
+    margin-right: 10px;
+    list-style-type: none;
+}
+
+/* FONTS IMPORTS */
+@font-face {
+    font-family: 'selima';
+    src: url('../fonts/Selima.ttf') format('truetype');
+}
