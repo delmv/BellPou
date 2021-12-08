@@ -45,3 +45,17 @@ module.exports.login = async (req, res) => {
     }
   }
 };
+
+module.exports.getUserSession = async (req, res) => {
+  if (req.session !== undefined) {
+    let user = null
+    if (req.session.authLevel === "manager") {
+      user = await Manager.findByPk(req.session.id)
+    } else {
+      user = await Client.findByPk(req.session.id)
+    }
+    res.json(user)
+  } else {
+    return res.sendStatus(401);
+  }
+}
