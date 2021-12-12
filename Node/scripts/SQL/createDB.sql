@@ -24,7 +24,8 @@ CREATE TABLE trash (
     id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     is_full bool NOT NULL DEFAULT false, 
     nb_alerts integer NOT NULL DEFAULT 0, 
-    last_empty date DEFAULT NULL, 
+    last_empty date DEFAULT NULL,
+    qr_value varchar(10) NOT NULL, 
     position_id int NOT NULL
     );
 
@@ -103,5 +104,9 @@ VALUES('Manager','MANAGER','1999-05-08','manager@outlook.com','$2a$10$fiKILzSQn2
 INSERT INTO position(coordinate_x, coordinate_y)
 VALUES(50.4709020054474, 4.855681660495311),(50.46962242576424, 4.855643728330823),(50.472316745691465, 4.856349266590292),(50.47165042279585, 4.854407139768528);
 
-INSERT into trash(position_id)
-VALUES(1);
+INSERT into trash(position_id,qr_value)
+VALUES(1,'0.a00b3ff6');
+
+INSERT into trash(position_id, qr_value)
+VALUES(2,'0.92f106b8');
+

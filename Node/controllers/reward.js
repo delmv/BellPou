@@ -61,7 +61,6 @@ module.exports.create = async (req, res) => {
         }
 
         if (vendorDB === null) {
-
           let positionDB = null;
           if (!isNaN(position.id)) {
             positionDB = await Position.findByPk(position.id);

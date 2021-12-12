@@ -4,6 +4,7 @@ const Trash = require("../models/Trash");
 const sequelize = require("../sequelize");
 const { Sequelize } = require("sequelize");
 const { raw } = require("body-parser");
+const { randomString } = require("../utils/utils");
 
 module.exports.findAll = async (req, res) => {
   try {
@@ -53,9 +54,9 @@ module.exports.create = async (req, res) => {
         deferrable: Sequelize.Deferrable.SET_DEFERRED,
       },
       async (t) => {
-        const positionDB = await Position.findOne({
-          where: { id: position.id },
-        });
+
+        const positionDB = await Position.findByPk(position.id);
+
         if (positionDB === null) {
           position = await Position.create(
             {
@@ -67,10 +68,12 @@ module.exports.create = async (req, res) => {
         } else {
           position = positionDB;
         }
-
+        const qrValue = randomString();
         await Trash.create(
           {
-            position_id: position.id,
+            qr_value: qrValue,
+            position_id: position.id
+
           },
           { transaction: t }
         );
