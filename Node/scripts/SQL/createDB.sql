@@ -104,9 +104,51 @@ VALUES('Manager','MANAGER','1999-05-08','manager@outlook.com','$2a$10$fiKILzSQn2
 INSERT INTO position(coordinate_x, coordinate_y)
 VALUES(50.4709020054474, 4.855681660495311),(50.46962242576424, 4.855643728330823),(50.472316745691465, 4.856349266590292),(50.47165042279585, 4.854407139768528);
 
-INSERT into trash(position_id,qr_value)
-VALUES(1,'0.a00b3ff6');
+INSERT INTO vendor(name_fr, name_en, description_fr, description_en, position_id)
+VALUES ('Australian', 'Australian', 'Marchand de glaces', 'Ice-cream seller', 1);
 
-INSERT into trash(position_id, qr_value)
-VALUES(2,'0.92f106b8');
+INSERT INTO reward(name_fr, name_en, description_fr, description_en, throins_cost, real_cost, vendor_id)
+VALUES('Glace 1 boule', 'One ball ice-cream', 'Une glace au parfum de votre choix', 'Ice cream with your own taste', 20, 5, 1);
+
+INSERT INTO reward(name_fr, name_en, description_fr, description_en, throins_cost, real_cost, vendor_id)
+VALUES('Glace Z boule', 'Two ball ice-cream', 'Une glace au parfum de votre choix', 'Ice cream with your own taste', 20, 5, 1);
+
+INSERT INTO reward(name_fr, name_en, description_fr, description_en, throins_cost, real_cost, vendor_id)
+VALUES('Glace 3 boule', 'Three ball ice-cream', 'Une glace au parfum de votre choix', 'Ice cream with your own taste', 20, 5, 1);
+
+INSERT INTO reward(name_fr, name_en, description_fr, description_en, throins_cost, real_cost, vendor_id)
+VALUES('Glace 4 boule', 'Four ball ice-cream', 'Une glace au parfum de votre choix', 'Ice cream with your own taste', 20, 5, 1);
+
+INSERT INTO reward(name_fr, name_en, description_fr, description_en, throins_cost, real_cost, vendor_id)
+VALUES('Glace 5 boule', 'Five ball ice-cream', 'Une glace au parfum de votre choix', 'Ice cream with your own taste', 20, 5, 1);
+
+INSERT INTO reward(name_fr, name_en, description_fr, description_en, throins_cost, real_cost, vendor_id)
+VALUES('Glace 6 boule', 'Six ball ice-cream', 'Une glace au parfum de votre choix', 'Ice cream with your own taste', 20, 5, 1);
+
+INSERT INTO reward(name_fr, name_en, description_fr, description_en, throins_cost, real_cost, vendor_id)
+VALUES('Glace 1 boule', 'Seven ball ice-cream', 'Une glace au parfum de votre choix', 'Ice cream with your own taste', 20, 5, 1);
+
+INSERT INTO reward(name_fr, name_en, description_fr, description_en, throins_cost, real_cost, vendor_id)
+VALUES('Glace 1 boule', 'Eight ball ice-cream', 'Une glace au parfum de votre choix', 'Ice cream with your own taste', 20, 5, 1);
+
+INSERT INTO reward(name_fr, name_en, description_fr, description_en, throins_cost, real_cost, vendor_id)
+VALUES('Glace 1 boule', 'Nine ball ice-cream', 'Une glace au parfum de votre choix', 'Ice cream with your own taste', 20, 5, 1);
+
+INSERT INTO reward(name_fr, name_en, description_fr, description_en, throins_cost, real_cost, vendor_id)
+VALUES('Glace 1 boule', 'Ten ball ice-cream', 'Une glace au parfum de votre choix', 'Ice cream with your own taste', 20, 5, 1);
+
+INSERT INTO reward(name_fr, name_en, description_fr, description_en, throins_cost, real_cost, vendor_id)
+VALUES('Glace 1 boule', 'Eleven ball ice-cream', 'Une glace au parfum de votre choix', 'Ice cream with your own taste', 20, 5, 1);
+
+INSERT INTO trash(position_id, is_full)
+VALUES(1, true);
+
+INSERT INTO trash(position_id,  is_full)
+VALUES(2,  true);
+
+INSERT INTO trash(position_id)
+VALUES(3);
+
+INSERT INTO trash(position_id)
+VALUES(4);
 
