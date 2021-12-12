@@ -140,15 +140,15 @@ VALUES('Glace 1 boule', 'Ten ball ice-cream', 'Une glace au parfum de votre choi
 INSERT INTO reward(name_fr, name_en, description_fr, description_en, throins_cost, real_cost, vendor_id)
 VALUES('Glace 1 boule', 'Eleven ball ice-cream', 'Une glace au parfum de votre choix', 'Ice cream with your own taste', 20, 5, 1);
 
-INSERT INTO trash(position_id, is_full)
-VALUES(1, true);
+INSERT INTO trash(position_id, is_full, qr_value)
+VALUES(1, true, "aaaaaaaaaa");
 
-INSERT INTO trash(position_id,  is_full)
-VALUES(2,  true);
+INSERT INTO trash(position_id,  is_full, qr_value)
+VALUES(2,  true, "aaaaaaaaab");
 
-INSERT INTO trash(position_id)
-VALUES(3);
+INSERT INTO trash(position_id, qr_value)
+VALUES(3, "aaaaaaaaac");
 
-INSERT INTO trash(position_id)
-VALUES(4);
+INSERT INTO trash(position_id, qr_value)
+VALUES(4, "aaaaaaaaad");
 
