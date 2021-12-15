@@ -108,47 +108,40 @@ INSERT INTO vendor(name_fr, name_en, description_fr, description_en, position_id
 VALUES ('Australian', 'Australian', 'Marchand de glaces', 'Ice-cream seller', 1);
 
 INSERT INTO reward(name_fr, name_en, description_fr, description_en, throins_cost, real_cost, vendor_id)
-VALUES('Glace 1 boule', 'One ball ice-cream', 'Une glace au parfum de votre choix', 'Ice cream with your own taste', 20, 5, 1);
+VALUES('Glace 1 boule', 'One ball ice-cream', 'Une glace au parfum de votre choix', 'Ice cream with your own taste', 20, 2, 1);
 
 INSERT INTO reward(name_fr, name_en, description_fr, description_en, throins_cost, real_cost, vendor_id)
-VALUES('Glace Z boule', 'Two ball ice-cream', 'Une glace au parfum de votre choix', 'Ice cream with your own taste', 20, 5, 1);
+VALUES('Glace 2 boules', 'Two ball ice-cream', 'Une glace au parfum de votre choix', 'Ice cream with your own taste', 35, 4, 1);
 
 INSERT INTO reward(name_fr, name_en, description_fr, description_en, throins_cost, real_cost, vendor_id)
-VALUES('Glace 3 boule', 'Three ball ice-cream', 'Une glace au parfum de votre choix', 'Ice cream with your own taste', 20, 5, 1);
+VALUES('Glace 3 boules', 'Three ball ice-cream', 'Une glace au parfum de votre choix', 'Ice cream with your own taste', 50, 6, 1);
 
 INSERT INTO reward(name_fr, name_en, description_fr, description_en, throins_cost, real_cost, vendor_id)
-VALUES('Glace 4 boule', 'Four ball ice-cream', 'Une glace au parfum de votre choix', 'Ice cream with your own taste', 20, 5, 1);
+VALUES('Canette de coca-cola', 'Coca-cola can', 'Une canette de coca-cola', 'A can of coca-cola', 15, 1, 1);
 
 INSERT INTO reward(name_fr, name_en, description_fr, description_en, throins_cost, real_cost, vendor_id)
-VALUES('Glace 5 boule', 'Five ball ice-cream', 'Une glace au parfum de votre choix', 'Ice cream with your own taste', 20, 5, 1);
+VALUES('Canette de coca-cola zéro', 'Coca-cola zero can', 'Une canette de coca-cola zero', 'A can of coca-cola zero', 15, 1, 1);
 
 INSERT INTO reward(name_fr, name_en, description_fr, description_en, throins_cost, real_cost, vendor_id)
-VALUES('Glace 6 boule', 'Six ball ice-cream', 'Une glace au parfum de votre choix', 'Ice cream with your own taste', 20, 5, 1);
+VALUES('Canette de fanta', 'Fanta can', 'Une canette de fanta', 'A can of fanta', 15, 1, 1);
 
 INSERT INTO reward(name_fr, name_en, description_fr, description_en, throins_cost, real_cost, vendor_id)
-VALUES('Glace 1 boule', 'Seven ball ice-cream', 'Une glace au parfum de votre choix', 'Ice cream with your own taste', 20, 5, 1);
+VALUES('100g de bonbons', '100g of candies', '100g de bonbons de votre choix', '100g of any candy you like', 40, 8, 1);
 
 INSERT INTO reward(name_fr, name_en, description_fr, description_en, throins_cost, real_cost, vendor_id)
-VALUES('Glace 1 boule', 'Eight ball ice-cream', 'Une glace au parfum de votre choix', 'Ice cream with your own taste', 20, 5, 1);
+VALUES('200g de bonbons', '200g of candies', '200g de bonbons de votre choix', '200g of any candy you like', 80, 16, 1);
 
 INSERT INTO reward(name_fr, name_en, description_fr, description_en, throins_cost, real_cost, vendor_id)
-VALUES('Glace 1 boule', 'Nine ball ice-cream', 'Une glace au parfum de votre choix', 'Ice cream with your own taste', 20, 5, 1);
-
-INSERT INTO reward(name_fr, name_en, description_fr, description_en, throins_cost, real_cost, vendor_id)
-VALUES('Glace 1 boule', 'Ten ball ice-cream', 'Une glace au parfum de votre choix', 'Ice cream with your own taste', 20, 5, 1);
-
-INSERT INTO reward(name_fr, name_en, description_fr, description_en, throins_cost, real_cost, vendor_id)
-VALUES('Glace 1 boule', 'Eleven ball ice-cream', 'Une glace au parfum de votre choix', 'Ice cream with your own taste', 20, 5, 1);
+VALUES('Peluche BellPou', 'Bellpou plush', 'Une édition collector de la peluche de votre application préférée !', 'A collector-edition bellpou pluch from your favorite app !', 100, 50, 1);
 
 INSERT INTO trash(position_id, is_full, qr_value)
-VALUES(1, true, "aaaaaaaaaa");
+VALUES(1, true, 'aaaaaaaaaa');
 
 INSERT INTO trash(position_id,  is_full, qr_value)
-VALUES(2,  true, "aaaaaaaaab");
+VALUES(2,  true, 'aaaaaaaaab');
 
 INSERT INTO trash(position_id, qr_value)
-VALUES(3, "aaaaaaaaac");
+VALUES(3, 'aaaaaaaaac');
 
 INSERT INTO trash(position_id, qr_value)
-VALUES(4, "aaaaaaaaad");
-
+VALUES(4, 'aaaaaaaaad');
