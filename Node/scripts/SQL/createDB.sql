@@ -25,7 +25,7 @@ CREATE TABLE trash (
     is_full bool NOT NULL DEFAULT false, 
     nb_alerts integer NOT NULL DEFAULT 0, 
     last_empty date DEFAULT NULL,
-    qr_value varchar(10) NOT NULL, 
+    qr_code varchar(10) NOT NULL, 
     position_id int NOT NULL
     );
 
@@ -72,13 +72,24 @@ CREATE TABLE personal_reward (
     reward_id integer NOT NULL
     );
 
+DROP TABLE IF EXISTS report CASCADE;
+CREATE TABLE report (
+    trash integer,
+    client integer,
+    PRIMARY KEY (trash, client)
+);
+
 ALTER TABLE personal_reward ADD CONSTRAINT FKPersonalRe968710 FOREIGN KEY (client_id) REFERENCES client (id);
 ALTER TABLE personal_reward ADD CONSTRAINT FKPersonalRe89979 FOREIGN KEY (reward_id) REFERENCES reward (id);
 ALTER TABLE reward ADD CONSTRAINT FKReward295879 FOREIGN KEY (vendor_id) REFERENCES vendor (id);
 ALTER TABLE vendor ADD CONSTRAINT FKVendor47062 FOREIGN KEY (position_id) REFERENCES position (id);
 ALTER TABLE trash ADD CONSTRAINT FKTrash231603 FOREIGN KEY (position_id) REFERENCES position (id);
+ALTER TABLE report ADD CONSTRAINT FKReport24874 FOREIGN KEY (client) REFERENCES client (id);
+ALTER TABLE report ADD CONSTRAINT FKReport275914 FOREIGN KEY (trash) REFERENCES trash (id);
 
 /* -- Suppression tables
+ALTER TABLE report DROP CONSTRAINT FKreport24874;
+ALTER TABLE report DROP CONSTRAINT FKreport275914;
 ALTER TABLE PersonalReward DROP CONSTRAINT FKPersonalRe968710;
 ALTER TABLE PersonalReward DROP CONSTRAINT FKPersonalRe89979;
 ALTER TABLE Reward DROP CONSTRAINT FKReward295879;
@@ -89,7 +100,8 @@ DROP TABLE IF EXISTS PersonalReward CASCADE;
 DROP TABLE IF EXISTS Reward CASCADE;
 DROP TABLE IF EXISTS Trash CASCADE;
 DROP TABLE IF EXISTS client CASCADE;
-DROP TABLE IF EXISTS Vendor CASCADE; */
+DROP TABLE IF EXISTS Vendor CASCADE;
+DROP TABLE IF EXISTS report CASCADE; */
 
 -- Insert
 
@@ -140,15 +152,15 @@ VALUES('Glace 1 boule', 'Ten ball ice-cream', 'Une glace au parfum de votre choi
 INSERT INTO reward(name_fr, name_en, description_fr, description_en, throins_cost, real_cost, vendor_id)
 VALUES('Glace 1 boule', 'Eleven ball ice-cream', 'Une glace au parfum de votre choix', 'Ice cream with your own taste', 20, 5, 1);
 
-INSERT INTO trash(position_id, is_full, qr_value)
-VALUES(1, true, "aaaaaaaaaa");
 
-INSERT INTO trash(position_id,  is_full, qr_value)
-VALUES(2,  true, "aaaaaaaaab");
+INSERT INTO trash(position_id, is_full, qr_code)
+VALUES(1, true, 'aaaaaaaaa');
 
-INSERT INTO trash(position_id, qr_value)
-VALUES(3, "aaaaaaaaac");
+INSERT INTO trash(position_id,  is_full, qr_code)
+VALUES(2,  true, 'aaaaaaaaab');
 
-INSERT INTO trash(position_id, qr_value)
-VALUES(4, "aaaaaaaaad");
+INSERT INTO trash(position_id, qr_code)
+VALUES(3, 'aaaaaaaaac');
 
+INSERT INTO trash(position_id, qr_code)
+VALUES(4, 'aaaaaaaaad');

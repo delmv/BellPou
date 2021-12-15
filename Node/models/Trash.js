@@ -24,7 +24,7 @@ const Trash = sequelize.define(
       type: DataTypes.DATE,
       defaultValue: null,
     },
-    qr_value: {
+    qr_code: {
       type: DataTypes.STRING,
       allowNull: false,
     }
