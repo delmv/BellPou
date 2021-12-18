@@ -1,5 +1,7 @@
 const Position = require("../models/Position");
 const Trash = require("../models/Trash");
+const Client = require("../models/Client");
+const Report = require("../models/Report")
 
 const sequelize = require("../sequelize");
 const { Sequelize } = require("sequelize");
@@ -96,3 +98,30 @@ module.exports.destroy = async (req, res) => {
     res.sendStatus(500);
   }
 };
+
+module.exports.addAdvertisement = async (req, res) => {
+  const { qr_code: qrCode, email } = req.body;
+
+  try {
+    
+      const trash = await Trash.findOne({where: {qr_code: qrCode}});
+      const clientId = req.session.id;
+
+      if (trash === null)
+        throw new Error("Trash not found in database");
+
+      await Report.create({
+        trash: trash.id,
+        client: clientId
+      });
+
+    res.sendStatus(201);
+  } catch (e) {
+    if (e.message === "Trash not found in database")
+      res.status(404).json({error: "The QR code passed doesn't exists."});
+    else {
+      console.error(e);
+      res.sendStatus(500);
+    }
+  }
+}

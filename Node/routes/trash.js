@@ -13,6 +13,11 @@ router.post(
   AuthoMiddleware.mustBeManager,
   TrashController.create
 );
+router.post(
+    '/scanQR',
+    IdMiddleware.identification,
+    TrashController.addAdvertisement
+)
 router.delete(
   '/',
   IdMiddleware.identification,
