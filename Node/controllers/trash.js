@@ -103,9 +103,7 @@ module.exports.addAdvertisement = async (req, res) => {
   const { qr_code: qrCode, email } = req.body;
 
   try {
-    await sequelize.transaction( {
-      deferrable: Sequelize.Deferrable.SET_DEFERRED
-    }, async (t) => {
+    
       const trash = await Trash.findOne({where: {qr_code: qrCode}});
       const clientId = req.session.id;
 
@@ -115,8 +113,7 @@ module.exports.addAdvertisement = async (req, res) => {
       await Report.create({
         trash: trash.id,
         client: clientId
-      }, {transaction: t});
-    });
+      });
 
     res.sendStatus(201);
   } catch (e) {
