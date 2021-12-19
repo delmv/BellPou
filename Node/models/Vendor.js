@@ -25,21 +25,21 @@ const Vendor = sequelize.define(
     description_en: {
       type: DataTypes.STRING,
       allowNull: false,
-    },
-    position_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: Position,
-        key: "id",
-        deferrable: Deferrable.INITIALLY_IMMEDIATE,
-      },
-    },
+    }
   },
   {
     timestamps: false,
     freezeTableName: true,
   }
 );
+Vendor.belongsTo(Position, {
+  foreignKey: {
+    name: 'position_id',
+    type: DataTypes.INTEGER,
+    allowNull: false
+  },
+  onDelete: 'CASCCADE'
+});
+
 
 module.exports = Vendor;

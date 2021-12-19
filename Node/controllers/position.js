@@ -20,6 +20,16 @@ module.exports.findOne = async (req, res) => {
   }
 };
 
+module.exports.findOrCreate = async (position) => {
+  return await Position.findOrCreate({
+    where: { id: position.id ?? null },
+    defaults: {
+      coordinate_x: position.coordinate_x,
+      coordinate_y: position.coordinate_y
+    }
+  });
+}
+
 module.exports.create = async (req, res) => {
   const body = req.body;
   const { coordinate_x, coordinate_y } = body;
@@ -34,11 +44,7 @@ module.exports.create = async (req, res) => {
 module.exports.findAll = async (req, res) => {
   try {
     const positions = await Position.findAll();
-    if (rewards.length != 0) {
-      res.json(positions);
-    } else {
-      res.sendStatus(204);
-    }
+    res.json(positions);
   } catch (error) {
     console.error(error);
     res.sendStatus(500);

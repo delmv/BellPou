@@ -1,5 +1,7 @@
-const Position = require("../models/Position");
 const Vendor = require("../models/vendor");
+const Position = require("../models/Position");
+
+const PositionController = require("../controllers/position");
 
 const sequelize = require("../sequelize");
 const { Sequelize } = require("sequelize");
@@ -8,12 +10,12 @@ const PersonalReward = require("../models/PersonalReward");
 
 module.exports.findAll = async (req, res) => {
   try {
-    const vendor = await Vendor.findAll();
-    if (rewards.length != 0) {
-      res.json(vendor);
-    } else {
-      res.sendStatus(204);
-    }
+    const vendor = await Vendor.findAll({
+      include: [Position]
+    });
+
+    res.json(vendor);
+
   } catch (error) {
     console.error(error);
     res.sendStatus(500);
@@ -27,7 +29,9 @@ module.exports.findOne = async (req, res) => {
     if (isNaN(id)) {
       res.sendStatus(400);
     } else {
-      const vendor = await Vendor.findOne({ where: { id: id } });
+      const vendor = await Vendor.findByPk(id, {
+        include: [Position]
+      });
       if (vendor !== null) {
         res.json(vendor);
       } else {
@@ -40,6 +44,20 @@ module.exports.findOne = async (req, res) => {
   }
 };
 
+module.exports.findOrCreate = async (vendor, positionId) => {
+  return await Vendor.findOrCreate({
+    where: { id: vendor.id },
+    defaults: {
+      name_fr: vendor.name_fr,
+      name_en: vendor.name_en,
+      description_fr: vendor.description_fr,
+      description_en: vendor.description_en,
+      position_id: positionId
+    }
+  }
+  )
+}
+
 module.exports.create = async (req, res) => {
   const { name_fr, name_en, description_fr, description_en } = req.body;
   let { position } = req.body;
@@ -49,20 +67,8 @@ module.exports.create = async (req, res) => {
         deferrable: Sequelize.Deferrable.SET_DEFERRED,
       },
       async (t) => {
-        const positionDB = await Position.findOne({
-          where: { id: position.id },
-        });
-        if (positionDB === null) {
-          position = await Position.create(
-            {
-              coordinate_x: position.coordinate_x,
-              coordinate_y: position.coordinate_y,
-            },
-            { transaction: t }
-          );
-        } else {
-          position = positionDB;
-        }
+
+        const positionsDB = await PositionController.findOrCreate(position, { transaction: t });
 
         await Vendor.create(
           {
@@ -70,7 +76,7 @@ module.exports.create = async (req, res) => {
             name_en,
             description_fr,
             description_en,
-            position_id: position.id,
+            position_id: positionsDB[0].id,
           },
           { transaction: t }
         );

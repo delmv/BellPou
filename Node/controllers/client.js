@@ -54,11 +54,7 @@ module.exports.create = async (req, res) => {
 module.exports.findAll = async (req, res) => {
   try {
     const clients = await Client.findAll();
-    if (clients.length != 0) {
-      res.json(clients);
-    } else {
-      res.sendStatus(204);
-    }
+    res.json(clients);
   } catch (error) {
     console.error(error);
     res.sendStatus(500);

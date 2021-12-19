@@ -15,11 +15,8 @@ module.exports.findAll = async (req, res) => {
       const personal_rewards = await PersonalReward.findAll({
         where: { client_id: clientId },
       });
-      if (personal_rewards !== null) {
-        res.json(personal_rewards);
-      } else {
-        res.sendStatus(204);
-      }
+      res.json(personal_rewards);
+
     } catch (error) {
       console.error(error);
       res.sendStatus(500);

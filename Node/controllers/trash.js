@@ -1,6 +1,8 @@
 const Position = require("../models/Position");
 const Trash = require("../models/Trash");
 
+const PositionController = require("../controllers/position");
+
 const sequelize = require("../sequelize");
 const { Sequelize } = require("sequelize");
 const { raw } = require("body-parser");
@@ -12,12 +14,8 @@ module.exports.findAll = async (req, res) => {
       include: [Position]
     });
 
-    if (trashs.length != 0) {
+    res.json(trashs);
 
-      res.json(trashs);
-    } else {
-      res.sendStatus(204);
-    }
   } catch (error) {
     console.error(error);
     res.sendStatus(500);
@@ -47,7 +45,8 @@ module.exports.findOne = async (req, res) => {
 };
 
 module.exports.create = async (req, res) => {
-  let { position } = req.body;
+  const { position } = req.body;
+  let trash = null;
   try {
     await sequelize.transaction(
       {
@@ -55,33 +54,69 @@ module.exports.create = async (req, res) => {
       },
       async (t) => {
 
-        const positionDB = await Position.findByPk(position.id);
-
-        if (positionDB === null) {
-          position = await Position.create(
-            {
-              coordinate_x: position.coordinate_x,
-              coordinate_y: position.coordinate_y,
-            },
-            { transaction: t }
-          );
-        } else {
-          position = positionDB;
-        }
+        const positionsDB = await PositionController.findOrCreate(position, { transaction: t });
         const qrValue = randomString();
-        await Trash.create(
+
+        trash = await Trash.create(
           {
             qr_value: qrValue,
-            position_id: position.id
+            position_id: positionsDB[0].id
 
           },
           { transaction: t }
         );
       }
     );
-    res.sendStatus(201);
+    res.json(trash);
   } catch (e) {
     console.log(e);
+    res.sendStatus(500);
+  }
+};
+
+module.exports.update = async (req, res) => {
+  if (req.session === undefined) {
+    return res.sendStatus(401);
+  }
+
+  const newData = {};
+  const toUpdate = req.body;
+  try {
+    const trash = await Trash.findByPk(toUpdate.id);
+    if (trash == null) {
+      req.sendStatus(404);
+    } else {
+      newData.is_full = toUpdate.is_full
+        ? toUpdate.is_full
+        : trash.is_full;
+
+      newData.nb_alerts = toUpdate.nb_alerts
+        ? toUpdate.nb_alerts
+        : trash.nb_alerts;
+
+      newData.last_empty = toUpdate.last_empty
+        ? toUpdate.last_empty
+        : trash.last_empty;
+
+      newData.qr_value = toUpdate.qr_value
+        ? toUpdate.qr_value
+        : trash.qr_value;
+
+      newData.position_id = toUpdate.position_id
+        ? toUpdate.position_id
+        : trash.position_id;
+
+      await trash.update({
+        is_full: newData.is_full,
+        nb_alerts: newData.nb_alerts,
+        last_empty: newData.last_empty,
+        qr_value: newData.qr_value,
+        position_id: newData.position_id,
+      });
+      res.sendStatus(204);
+    }
+  } catch (e) {
+    console.error(e);
     res.sendStatus(500);
   }
 };
