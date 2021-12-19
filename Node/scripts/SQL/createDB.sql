@@ -25,7 +25,7 @@ CREATE TABLE trash (
     is_full bool NOT NULL DEFAULT false, 
     nb_alerts integer NOT NULL DEFAULT 0, 
     last_empty date DEFAULT NULL,
-    qr_value varchar(10) NOT NULL, 
+    qr_code varchar(10) NOT NULL, 
     position_id int NOT NULL
     );
 
@@ -72,13 +72,24 @@ CREATE TABLE personal_reward (
     reward_id integer NOT NULL
     );
 
+DROP TABLE IF EXISTS report CASCADE;
+CREATE TABLE report (
+    trash integer,
+    client integer,
+    PRIMARY KEY (trash, client)
+);
+
 ALTER TABLE personal_reward ADD CONSTRAINT FKPersonalRe968710 FOREIGN KEY (client_id) REFERENCES client (id);
 ALTER TABLE personal_reward ADD CONSTRAINT FKPersonalRe89979 FOREIGN KEY (reward_id) REFERENCES reward (id);
 ALTER TABLE reward ADD CONSTRAINT FKReward295879 FOREIGN KEY (vendor_id) REFERENCES vendor (id);
 ALTER TABLE vendor ADD CONSTRAINT FKVendor47062 FOREIGN KEY (position_id) REFERENCES position (id);
 ALTER TABLE trash ADD CONSTRAINT FKTrash231603 FOREIGN KEY (position_id) REFERENCES position (id);
+ALTER TABLE report ADD CONSTRAINT FKReport24874 FOREIGN KEY (client) REFERENCES client (id);
+ALTER TABLE report ADD CONSTRAINT FKReport275914 FOREIGN KEY (trash) REFERENCES trash (id);
 
 /* -- Suppression tables
+ALTER TABLE report DROP CONSTRAINT FKreport24874;
+ALTER TABLE report DROP CONSTRAINT FKreport275914;
 ALTER TABLE PersonalReward DROP CONSTRAINT FKPersonalRe968710;
 ALTER TABLE PersonalReward DROP CONSTRAINT FKPersonalRe89979;
 ALTER TABLE Reward DROP CONSTRAINT FKReward295879;
@@ -89,7 +100,8 @@ DROP TABLE IF EXISTS PersonalReward CASCADE;
 DROP TABLE IF EXISTS Reward CASCADE;
 DROP TABLE IF EXISTS Trash CASCADE;
 DROP TABLE IF EXISTS client CASCADE;
-DROP TABLE IF EXISTS Vendor CASCADE; */
+DROP TABLE IF EXISTS Vendor CASCADE;
+DROP TABLE IF EXISTS report CASCADE; */
 
 -- Insert
 
@@ -104,9 +116,45 @@ VALUES('Manager','MANAGER','1999-05-08','manager@outlook.com','$2a$10$fiKILzSQn2
 INSERT INTO position(coordinate_x, coordinate_y)
 VALUES(50.4709020054474, 4.855681660495311),(50.46962242576424, 4.855643728330823),(50.472316745691465, 4.856349266590292),(50.47165042279585, 4.854407139768528);
 
-INSERT into trash(position_id,qr_value)
-VALUES(1,'0.a00b3ff6');
+INSERT INTO vendor(name_fr, name_en, description_fr, description_en, position_id)
+VALUES ('Australian', 'Australian', 'Marchand de glaces', 'Ice-cream seller', 1);
 
-INSERT into trash(position_id, qr_value)
-VALUES(2,'0.92f106b8');
+INSERT INTO reward(name_fr, name_en, description_fr, description_en, throins_cost, real_cost, vendor_id)
+VALUES('Glace 1 boule', 'One ball ice-cream', 'Une glace au parfum de votre choix', 'Ice cream with your own taste', 20, 2, 1);
+
+INSERT INTO reward(name_fr, name_en, description_fr, description_en, throins_cost, real_cost, vendor_id)
+VALUES('Glace 2 boules', 'Two ball ice-cream', 'Une glace au parfum de votre choix', 'Ice cream with your own taste', 35, 4, 1);
+
+INSERT INTO reward(name_fr, name_en, description_fr, description_en, throins_cost, real_cost, vendor_id)
+VALUES('Glace 3 boules', 'Three ball ice-cream', 'Une glace au parfum de votre choix', 'Ice cream with your own taste', 50, 6, 1);
+
+INSERT INTO reward(name_fr, name_en, description_fr, description_en, throins_cost, real_cost, vendor_id)
+VALUES('Canette de coca-cola', 'Coca-cola can', 'Une canette de coca-cola', 'A can of coca-cola', 15, 1, 1);
+
+INSERT INTO reward(name_fr, name_en, description_fr, description_en, throins_cost, real_cost, vendor_id)
+VALUES('Canette de coca-cola zéro', 'Coca-cola zero can', 'Une canette de coca-cola zero', 'A can of coca-cola zero', 15, 1, 1);
+
+INSERT INTO reward(name_fr, name_en, description_fr, description_en, throins_cost, real_cost, vendor_id)
+VALUES('Canette de fanta', 'Fanta can', 'Une canette de fanta', 'A can of fanta', 15, 1, 1);
+
+INSERT INTO reward(name_fr, name_en, description_fr, description_en, throins_cost, real_cost, vendor_id)
+VALUES('100g de bonbons', '100g of candies', '100g de bonbons de votre choix', '100g of any candy you like', 40, 8, 1);
+
+INSERT INTO reward(name_fr, name_en, description_fr, description_en, throins_cost, real_cost, vendor_id)
+VALUES('200g de bonbons', '200g of candies', '200g de bonbons de votre choix', '200g of any candy you like', 80, 16, 1);
+
+INSERT INTO reward(name_fr, name_en, description_fr, description_en, throins_cost, real_cost, vendor_id)
+VALUES('Peluche BellPou', 'Bellpou plush', 'Une édition collector de la peluche de votre application préférée !', 'A collector-edition bellpou pluch from your favorite app !', 100, 50, 1);
+
+INSERT INTO trash(position_id, is_full, qr_code)
+VALUES(1, true, 'aaaaaaaaa');
+
+INSERT INTO trash(position_id,  is_full, qr_code)
+VALUES(2,  true, 'aaaaaaaaab');
+
+INSERT INTO trash(position_id, qr_code)
+VALUES(3, 'aaaaaaaaac');
+
+INSERT INTO trash(position_id, qr_code)
+VALUES(4, 'aaaaaaaaad');
 
