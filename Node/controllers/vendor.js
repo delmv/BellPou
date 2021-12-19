@@ -44,19 +44,6 @@ module.exports.findOne = async (req, res) => {
   }
 };
 
-module.exports.findOrCreate = async (vendor, positionId) => {
-  return await Vendor.findOrCreate({
-    where: { id: vendor.id ?? null },
-    defaults: {
-      name_fr: vendor.name_fr,
-      name_en: vendor.name_en,
-      description_fr: vendor.description_fr,
-      description_en: vendor.description_en,
-      position_id: positionId
-    }
-  }
-  )
-}
 
 module.exports.create = async (req, res) => {
   const { name_fr, name_en, description_fr, description_en } = req.body;

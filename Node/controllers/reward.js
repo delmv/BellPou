@@ -1,5 +1,5 @@
 const Reward = require("../models/Reward");
-const Position = require("../models/Position");
+const Vendor = require("../models/Vendor");
 
 const PositionController = require("./position");
 const VendorController = require("./vendor")
@@ -47,16 +47,26 @@ module.exports.create = async (req, res) => {
     real_cost
   } = req.body;
   let { vendor } = req.body;
-  let { position } = req.body;
   try {
     await sequelize.transaction(
       {
         deferrable: Sequelize.Deferrable.SET_DEFERRED,
       },
       async (t) => {
+        let vendorDB = await Vendor.findByPk(vendor.id);
+        if (vendorDB === null) {
+          const positionsDB = await PositionController.findOrCreate(vendor.position, { transaction: t });
+          vendorDB = await Vendor.create(
+            {
+              name_fr,
+              name_en,
+              description_fr,
+              description_en,
+              position_id: positionsDB[0].id,
+            }, { transaction: t }
+          );
 
-        const positionsDB = await PositionController.findOrCreate(position, { transaction: t });
-        const vendorsDB = await VendorController.findOrCreate(vendor, positionsDB[0].id, { transaction: t })
+        }
 
         await Reward.create(
           {
@@ -66,7 +76,7 @@ module.exports.create = async (req, res) => {
             description_en,
             throins_cost,
             real_cost,
-            vendor_id: vendorsDB[0].id,
+            vendor_id: vendorsDB.id,
           },
           { transaction: t }
         );
