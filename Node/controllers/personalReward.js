@@ -4,7 +4,7 @@ const PersonalReward = require("../models/PersonalReward");
 const Position = require("../models/Position");
 const Reward = require("../models/Reward");
 const { randomString } = require("../utils/utils");
-const sequelize = require("../sequelize");
+const sequelize = require("../sequelize/sequelize");
 const { Sequelize } = require("sequelize");
 
 module.exports.findAll = async (req, res) => {

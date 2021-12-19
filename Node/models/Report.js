@@ -1,5 +1,5 @@
 const { DataTypes, Sequelize, Deferrable } = require("sequelize");
-const sequelize = require("../sequelize");
+const sequelize = require("../sequelize/sequelize");
 const Trash = require('./Trash')
 const Client = require('./Client')
 

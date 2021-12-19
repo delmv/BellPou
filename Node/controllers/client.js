@@ -3,8 +3,41 @@ const PersonalReward = require("../models/PersonalReward");
 const { getHash } = require("../utils/utils");
 const jwt = require("jsonwebtoken");
 
-const sequelize = require("../sequelize");
+const sequelize = require("../sequelize/sequelize");
 const { Sequelize } = require("sequelize");
+
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *      Client:
+ *          type: object
+ *          properties:
+ *              id:
+ *                  type: integer
+ *              first_name:
+ *                  type: string
+ *              last_name:
+ *                  type: string
+ *              birth_date:
+ *                  type: string
+ *                  format: date
+ *              nb_throins:
+ *                  type: integer
+ *              email:
+ *                  type: string
+ *                  format: email
+ *              password:
+ *                  type: string
+ *                  format: password
+ *              nb_bad_report:
+ *                  type: integer
+ *                  minimum: 0
+ *              is_banned:
+ *                  type: boolean
+ *          required:
+ * 
+ */
 
 module.exports.create = async (req, res) => {
   const body = req.body;

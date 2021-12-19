@@ -5,7 +5,7 @@ const Report = require("../models/Report")
 
 const PositionController = require("../controllers/position");
 
-const sequelize = require("../sequelize");
+const sequelize = require("../sequelize/sequelize");
 const { Sequelize } = require("sequelize");
 const { raw } = require("body-parser");
 const { randomString } = require("../utils/utils");

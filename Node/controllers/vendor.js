@@ -3,7 +3,7 @@ const Position = require("../models/Position");
 
 const PositionController = require("../controllers/position");
 
-const sequelize = require("../sequelize");
+const sequelize = require("../sequelize/sequelize");
 const { Sequelize } = require("sequelize");
 const Reward = require("../models/Reward");
 const PersonalReward = require("../models/PersonalReward");

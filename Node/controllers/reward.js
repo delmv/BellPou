@@ -4,7 +4,7 @@ const Vendor = require("../models/Vendor");
 const PositionController = require("./position");
 const VendorController = require("./vendor")
 
-const sequelize = require("../sequelize");
+const sequelize = require("../sequelize/sequelize");
 const { Sequelize } = require("sequelize");
 
 

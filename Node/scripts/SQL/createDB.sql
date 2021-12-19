@@ -14,8 +14,8 @@ CREATE TABLE reward (
     name_en varchar(100) NOT NULL, 
     description_fr varchar(255) NOT NULL, 
     description_en varchar(255) NOT NULL, 
-    throins_cost integer NOT NULL, 
-    real_cost float4 NOT NULL, 
+    throins_cost integer NOT NULL CHECK (throins_cost >= 0), 
+    real_cost float4 NOT NULL CHECK (real_cost >= 0), 
     vendor_id integer NOT NULL 
     );
 
@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS trash CASCADE;
 CREATE TABLE trash (
     id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     is_full bool NOT NULL DEFAULT false, 
-    nb_alerts integer NOT NULL DEFAULT 0, 
+    nb_alerts integer NOT NULL DEFAULT 0 CHECK (nb_alerts >= 0), 
     last_empty date DEFAULT NULL,
     qr_code varchar(10) NOT NULL, 
     position_id int NOT NULL
@@ -35,10 +35,10 @@ CREATE TABLE client (
     first_name varchar(30) NOT NULL, 
     last_name varchar(30) NOT NULL, 
     birth_date date NOT NULL, 
-    nb_throins integer NOT NULL DEFAULT 0, 
+    nb_throins integer NOT NULL DEFAULT 0 CHECK (nb_throins >= 0), 
     email varchar(100) NOT NULL UNIQUE, 
     password varchar NOT NULL, 
-    nb_bad_reports integer NOT NULL DEFAULT 0, 
+    nb_bad_reports integer NOT NULL DEFAULT 0 CHECK (nb_bad_reports >= 0), 
     is_banned bool NOT NULL DEFAULT false
     );
 
