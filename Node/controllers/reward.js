@@ -56,7 +56,7 @@ module.exports.create = async (req, res) => {
       async (t) => {
 
         const positionsDB = await PositionController.findOrCreate(position, { transaction: t });
-        const vendorsDB = await VendorController.findOrCreate(vendor, positionsDB[0], { transaction: t })
+        const vendorsDB = await VendorController.findOrCreate(vendor, positionsDB[0].id, { transaction: t })
 
         await Reward.create(
           {

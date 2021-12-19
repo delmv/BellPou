@@ -3,6 +3,9 @@ const Client = require("../models/Client");
 const PersonalReward = require("../models/PersonalReward");
 const Position = require("../models/Position");
 const Reward = require("../models/Reward");
+const { randomString } = require("../utils/utils");
+const sequelize = require("../sequelize");
+const { Sequelize } = require("sequelize");
 
 module.exports.findAll = async (req, res) => {
   if (req.session === undefined) {
@@ -52,24 +55,46 @@ module.exports.create = async (req, res) => {
   }
 
   const clientId = req.session.id;
-  const { discount_code, exp_date, reward_id } = req.body;
+  const { exp_date, reward_id } = req.body;
 
   try {
     const client = await Client.findByPk(clientId);
     const reward = await Reward.findByPk(reward_id);
-    if (client != null && reward != null) {
-      await PersonalReward.create({
-        discount_code,
-        exp_date,
-        client_id: client.id,
-        reward_id: reward.id
+
+    if (client === null)
+      throw new Error("Client not found");
+
+    if (reward === null)
+      throw new Error("Reward not found");
+
+    if (client.nb_throins < reward.throins_cost)
+      throw new Error("Too poor :'( ");
+
+    await sequelize.transaction(
+      {
+        deferrable: Sequelize.Deferrable.SET_DEFERRED,
+      },
+      async (t) => {
+        await client.update({
+          nb_throins: client.nb_throins - reward.throins_cost
+        }, { transaction: t });
+
+        const discount_code = randomString();
+        await PersonalReward.create({
+          discount_code,
+          exp_date,
+          client_id: client.id,
+          reward_id: reward.id
+        },
+          { transaction: t }
+        );
       });
-    } else {
-      res.sendStatus(400);
-    }
 
     res.sendStatus(201);
   } catch (error) {
+    if (error.message === "Client not found" || error.message === "Reward not found")
+      res.status(404).json({ error: error.message });
+
     console.error(error);
     res.sendStatus(500);
   }

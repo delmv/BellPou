@@ -46,7 +46,7 @@ module.exports.findOne = async (req, res) => {
 
 module.exports.findOrCreate = async (vendor, positionId) => {
   return await Vendor.findOrCreate({
-    where: { id: vendor.id },
+    where: { id: vendor.id ?? null },
     defaults: {
       name_fr: vendor.name_fr,
       name_en: vendor.name_en,
