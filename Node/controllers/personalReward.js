@@ -55,7 +55,7 @@ module.exports.create = async (req, res) => {
   }
 
   const clientId = req.session.id;
-  const { exp_date, reward_id } = req.body;
+  const { reward_id } = req.body;
 
   try {
     const client = await Client.findByPk(clientId);
@@ -80,7 +80,10 @@ module.exports.create = async (req, res) => {
         }, { transaction: t });
 
         const discount_code = randomString();
-        await PersonalReward.create({
+        let date = new Date();
+        date.setMonth(date.getMonth() + 2);
+        const exp_date = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+        const personalReward = await PersonalReward.create({
           discount_code,
           exp_date,
           client_id: client.id,
@@ -88,9 +91,8 @@ module.exports.create = async (req, res) => {
         },
           { transaction: t }
         );
+        res.json(personalReward);
       });
-
-    res.sendStatus(201);
   } catch (error) {
     if (error.message === "Client not found" || error.message === "Reward not found")
       res.status(404).json({ error: error.message });
