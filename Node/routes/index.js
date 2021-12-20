@@ -5,6 +5,7 @@ const RewardRouter = require("./reward");
 const TrashRouter = require("./trash");
 const VendorRouter = require("./vendor");
 const UserRouter = require("./user");
+const PingRouter = require("./ping");
 
 const router = require("express").Router();
 
@@ -15,5 +16,6 @@ router.use("/reward", RewardRouter);
 router.use("/trash", TrashRouter);
 router.use("/vendor", VendorRouter);
 router.use("/user", UserRouter);
+router.use("/ping", PingRouter)
 
 module.exports = router;
