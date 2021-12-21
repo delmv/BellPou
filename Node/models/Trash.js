@@ -1,6 +1,34 @@
 const { DataTypes, Sequelize, Deferrable } = require("sequelize");
 const sequelize = require("../sequelize/sequelize");
 const Position = require("./Position");
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *      Trash:
+ *          type: object
+ *          properties:
+ *              id:
+ *                  type: integer
+ *              is_full:
+ *                  type: boolean
+ *              nb_alerts:
+ *                  type: integer
+ *              last_empty:
+ *                  type: string
+ *                  format: date
+ *              qr_code:
+ *                  type: string
+ *              position_id:
+ *                  type: integer
+ *                  $ref: "#/components/schemas/Position"
+ *          required:
+ *              - is_full
+ *              - nb_alerts
+ *              - last_empty
+ *              - qr_code
+ *              - position_id
+ */
 
 const Trash = sequelize.define(
   "trash",

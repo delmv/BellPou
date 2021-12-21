@@ -6,42 +6,64 @@ const jwt = require("jsonwebtoken");
 const sequelize = require("../sequelize/sequelize");
 const { Sequelize } = require("sequelize");
 
+
+
 /**
  * @swagger
  * components:
- *  schemas:
- *      Client:
- *          type: object
- *          properties:
- *              id:
- *                  type: integer
- *              first_name:
- *                  type: string
- *              last_name:
- *                  type: string
- *              birth_date:
- *                  type: string
- *                  format: date
- *              nb_throins:
- *                  type: integer
- *              email:
- *                  type: string
- *                  format: email
- *              password:
- *                  type: string
- *                  format: password
- *              nb_bad_report:
- *                  type: integer
- *                  minimum: 0
- *              is_banned:
- *                  type: boolean
- *          required:
- * 
+ *  responses:
+ *      ClientsFound:
+ *           description: return un array of Clients
+ *           content:
+ *               application/json:
+ *                   schema:
+ *                      type: array
+ *                      items:
+ *                        $ref: '#/components/schemas/Client'
+ */
+module.exports.findAll = async (req, res) => {
+  try {
+    const clients = await Client.findAll();
+    res.json(clients);
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
+  }
+};
+
+/**
+ *@swagger
+ *components:
+ *  responses:
+ *      ClientAdded:
+ *          description: The client has been added
+ *  requestBodies:
+ *      ClientToAdd:
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          first_name:
+ *                              type: string
+ *                          last_name:
+ *                              type: string
+ *                          birth_date:
+ *                              type: string
+ *                              format: date
+ *                          nb_throins:
+ *                              type: integer
+ *                          email:
+ *                              type: string
+ *                              format: email
+ *                          password:
+ *                              type: string
+ *                              format: password
  */
 
+
 module.exports.create = async (req, res) => {
-  const body = req.body;
-  const { first_name, last_name, birth_date, email, password } = body;
+  const { first_name, last_name, birth_date, email, password } = req.body;
   if (
     first_name != undefined &&
     last_name != undefined &&
@@ -84,15 +106,19 @@ module.exports.create = async (req, res) => {
   }
 };
 
-module.exports.findAll = async (req, res) => {
-  try {
-    const clients = await Client.findAll();
-    res.json(clients);
-  } catch (error) {
-    console.error(error);
-    res.sendStatus(500);
-  }
-};
+/**
+ *@swagger
+ *components:
+ *  responses:
+ *      ClientUpdated:
+ *          description: The Client has been updtated
+ *  requestBodies:
+ *      ClientToUpdate:
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#/components/schemas/Client'
+ */
 
 module.exports.update = async (req, res) => {
   if (req.session === undefined) {
@@ -172,6 +198,22 @@ module.exports.update = async (req, res) => {
   }
 };
 
+/**
+ *@swagger
+ *components:
+ *  responses:
+ *      ClientDeleted:
+ *          description: The client has been deleted
+ *  requestBodies:
+ *      ClientToDelete:
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          id:
+ *                              type: integer
+ */
 module.exports.destroy = async (req, res) => {
   const { id } = req.body;
   try {

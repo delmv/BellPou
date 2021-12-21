@@ -1,12 +1,23 @@
-const { where } = require("sequelize/dist");
 const Client = require("../models/Client");
 const PersonalReward = require("../models/PersonalReward");
-const Position = require("../models/Position");
 const Reward = require("../models/Reward");
 const { randomString } = require("../utils/utils");
 const sequelize = require("../sequelize/sequelize");
 const { Sequelize } = require("sequelize");
 
+/**
+ * @swagger
+ * components:
+ *  responses:
+ *      PersonalsRewardsFound:
+ *           description: return all the personal reward of the user session
+ *           content:
+ *               application/json:
+ *                   schema:
+ *                      type: array
+ *                      items:
+ *                        $ref: '#/components/schemas/PersonalReward'
+ */
 module.exports.findAll = async (req, res) => {
   if (req.session === undefined) {
     return res.sendStatus(401);
@@ -29,25 +40,23 @@ module.exports.findAll = async (req, res) => {
   }
 };
 
-module.exports.findOne = async (req, res) => {
-  const idTexte = req.params.id; //attention ! Il s'agit de texte !
-  const id = parseInt(idTexte);
-  try {
-    if (isNaN(id)) {
-      res.sendStatus(400);
-    } else {
-      const personalReward = await PersonalReward.findByPk(id);
-      if (personalReward !== null) {
-        res.json(personalReward);
-      } else {
-        res.sendStatus(404);
-      }
-    }
-  } catch (error) {
-    console.error(error);
-    res.sendStatus(500);
-  }
-};
+/**
+ *@swagger
+ *components:
+ *  responses:
+ *      PersonalRewardAdded:
+ *          description: The personalReward has been added
+ *  requestBodies:
+ *      PersonalRewardToAdd:
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          reward_id:
+ *                              type: integer
+ */
+
 
 module.exports.create = async (req, res) => {
   if (req.session === undefined) {
@@ -101,7 +110,22 @@ module.exports.create = async (req, res) => {
     res.sendStatus(500);
   }
 };
-
+/**
+ *@swagger
+ *components:
+ *  responses:
+ *      PersonalRewardDeleted:
+ *          description: The personalReward has been deleted
+ *  requestBodies:
+ *      PersonalRewardToDelete:
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          id:
+ *                              type: integer
+ */
 module.exports.destroy = async (req, res) => {
   const { id } = req.body;
   try {

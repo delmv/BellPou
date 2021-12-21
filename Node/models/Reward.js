@@ -2,6 +2,40 @@ const { DataTypes, Sequelize, Deferrable } = require("sequelize");
 const sequelize = require("../sequelize/sequelize");
 const Vendor = require("./Vendor");
 
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *      Reward:
+ *          type: object
+ *          properties:
+ *              id:
+ *                  type: integer
+ *              name_fr:
+ *                  type: string
+ *              name_en:
+ *                  type: string
+ *              description_fr:
+ *                  type: string
+ *              description_en:
+ *                  type: string
+ *              throins_cost:
+ *                  type: integer
+ *              real_cost:
+ *                  type: number
+ *                  format: float
+ *              vendor_id:
+ *                  type: integer
+ *          required:
+ *              - name_fr
+ *              - name_en
+ *              - description_fr
+ *              - description_en
+ *              - throins_cost
+ *              - real_cost
+ *              - vendor_id
+ */
+
 const Reward = sequelize.define(
   "reward",
   {

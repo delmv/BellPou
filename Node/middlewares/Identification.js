@@ -2,6 +2,22 @@ require('dotenv').config();
 const process = require('process');
 const jwt = require('jsonwebtoken');
 
+
+/**
+ * @swagger
+ * components:
+ *  securitySchemes:
+ *      bearerAuth:
+ *          type: http
+ *          scheme: bearer
+ *          bearerFormat: JWT
+ *  responses:
+ *      ErrorJWT:
+ *          description: The JWT is not valid
+ *      MissingJWT:
+ *          description: No JWT
+ */
+
 module.exports.identification = async (req, res, next) => {
     const headerAuth = req.get('authorization');
     if (headerAuth !== undefined && headerAuth.includes("Bearer")) {

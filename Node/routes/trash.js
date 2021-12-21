@@ -5,6 +5,7 @@ const AuthoMiddleware = require("../middlewares/Authorization");
 const Router = require("express-promise-router");
 const router = new Router();
 
+
 router.get('/:id', TrashController.findOne);
 router.get('/', TrashController.findAll);
 router.patch(

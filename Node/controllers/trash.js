@@ -146,8 +146,8 @@ module.exports.addAdvertisement = async (req, res) => {
         throw new Error("Trash not found in database");
 
       await Report.create({
-        trash: trash.id,
-        client: clientId
+        trash_id: trash.id,
+        client_id: clientId
       });
 
     res.sendStatus(201);

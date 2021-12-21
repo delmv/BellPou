@@ -8,8 +8,19 @@ const sequelize = require("../sequelize/sequelize");
 const { Sequelize } = require("sequelize");
 
 
+/**
+ * @swagger
+ * components:
+ *  responses:
+ *      RewardFound:
+ *           description: return a reward
+ *           content:
+ *               application/json:
+ *                   schema:
+ *                       $ref: '#/models/schemas/Reward'
+ */
 module.exports.findOne = async (req, res) => {
-  const idTexte = req.params.id; //attention ! Il s'agit de texte !
+  const idTexte = req.params.id;
   const id = parseInt(idTexte);
   try {
     if (isNaN(id)) {
@@ -36,6 +47,7 @@ module.exports.findAll = async (req, res) => {
     res.sendStatus(500);
   }
 };
+
 
 module.exports.create = async (req, res) => {
   const {
