@@ -77,7 +77,7 @@ module.exports.create = async (req, res) => {
       throw new Error("Reward not found");
 
     if (client.nb_throins < reward.throins_cost)
-      throw new Error("Too poor :'( ");
+      throw new Error("Too poor :'(");
 
     await sequelize.transaction(
       {
@@ -103,7 +103,7 @@ module.exports.create = async (req, res) => {
         res.json(personalReward);
       });
   } catch (error) {
-    if (error.message === "Client not found" || error.message === "Reward not found")
+    if (error.message === "Client not found" || error.message === "Reward not found" || error.message === "Too poor :'(")
       res.status(404).json({ error: error.message });
 
     console.error(error);

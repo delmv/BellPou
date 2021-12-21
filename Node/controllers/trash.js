@@ -135,7 +135,7 @@ module.exports.destroy = async (req, res) => {
 };
 
 module.exports.addAdvertisement = async (req, res) => {
-  const { qr_code: qrCode, email } = req.body;
+  const { qr_code: qrCode } = req.body;
 
   try {
     
@@ -144,10 +144,18 @@ module.exports.addAdvertisement = async (req, res) => {
 
       if (trash === null)
         throw new Error("Trash not found in database");
-
+      
       await Report.create({
         trash_id: trash.id,
         client_id: clientId
+      });
+
+      trash.nb_alerts++;
+      trash.is_full = trash.nb_alerts >= 3;
+      
+      await trash.update({
+        is_full: trash.is_full,
+        nb_alerts: trash.nb_alerts
       });
 
     res.sendStatus(201);
