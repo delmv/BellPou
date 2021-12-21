@@ -114,7 +114,7 @@ INSERT into manager(first_name, last_name, birth_date, email, password)
 VALUES('Manager','MANAGER','1999-05-08','manager@outlook.com','$2a$10$fiKILzSQn2YvA.mbmxhqa.7f8pErrnl4qofZY7nE/a5Vq8KakfPKG'); --password
 
 INSERT INTO position(coordinate_x, coordinate_y)
-VALUES(50.4709020054474, 4.855681660495311),(50.46962242576424, 4.855643728330823),(50.472316745691465, 4.856349266590292),(50.47165042279585, 4.854407139768528);
+VALUES(50.471466, 4.853216),(50.471650, 4.854621),(50.471725, 4.856112),(50.471807, 4.856563),(50.471896, 4.857389),(50.471896, 4.857947);
 
 INSERT INTO vendor(name_fr, name_en, description_fr, description_en, position_id)
 VALUES ('Australian', 'Australian', 'Marchand de glaces', 'Ice-cream seller', 1);
@@ -146,15 +146,20 @@ VALUES('200g de bonbons', '200g of candies', '200g de bonbons de votre choix', '
 INSERT INTO reward(name_fr, name_en, description_fr, description_en, throins_cost, real_cost, vendor_id)
 VALUES('Peluche BellPou', 'Bellpou plush', 'Une édition collector de la peluche de votre application préférée !', 'A collector-edition bellpou pluch from your favorite app !', 100, 50, 1);
 
-INSERT INTO trash(position_id, is_full, qr_code)
-VALUES(1, true, 'aaaaaaaaa');
-
-INSERT INTO trash(position_id,  is_full, qr_code)
-VALUES(2,  true, 'aaaaaaaaab');
+INSERT INTO trash(position_id, qr_code)
+VALUES(1, 'aaaaaaaaa');
 
 INSERT INTO trash(position_id, qr_code)
-VALUES(3, 'aaaaaaaaac');
+VALUES(2, 'aaaaaaaab');
 
 INSERT INTO trash(position_id, qr_code)
-VALUES(4, 'aaaaaaaaad');
+VALUES(3, 'aaaaaaaac');
 
+INSERT INTO trash(position_id, qr_code)
+VALUES(4, 'aaaaaaaad');
+
+INSERT INTO trash(position_id, qr_code)
+VALUES(5, 'aaaaaaae');
+
+INSERT INTO trash(position_id, qr_code)
+VALUES(6, 'aaaaaaaaf');
