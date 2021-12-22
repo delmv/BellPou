@@ -196,9 +196,7 @@ module.exports.empty = async (req, res) => {
   const { were_real_reports: wereRealReports, trash_id: trash_id } = req.body
 
   try {
-
     const reports = await Report.findAll({where: {trash: trash_id}})
-
     if (reports !== null) {
       await sequelize.transaction(
         {
