@@ -9,21 +9,27 @@ const router = new Router();
 /**
  * @swagger
  * /reward/{id}:
- *  post:
+ *  get:
  *      tags:
- *          - Reward
- *      security:
- *          - bearerAuth: []
- *      requestBody:
- *          $ref: '#/components/requestBodies/RewardToAdd'
+ *         - Reward
+ *      parameters:
+ *          - name: id
+ *            description: ID of a reward
+ *            in: path
+ *            required: true
+ *            schema:
+ *              type: integer
  *      responses:
- *          201:
- *              $ref: '#/components/responses/RewardAdded'
+ *          200:
+ *              $ref: '#/components/responses/RewardFound'
+ *          404:
+ *              description: Reward not found
  *          500:
- *              description: Server error
+ *              description: Server Error
  *
  */
 router.get('/:id', RewardController.findOne);
+
 /**
  * @swagger
  * /reward:
@@ -33,12 +39,15 @@ router.get('/:id', RewardController.findOne);
  *      responses:
  *          200:
  *              $ref: '#/components/responses/RewardsFound'
+ *          404:
+ *              description: client not found || reward not found || too poor
  *          500:
  *              description: Server error
  *
  */
-
 router.get('/', RewardController.findAll);
+
+router.get('/paging', RewardController.findAllPaging);
 
 /**
  * @swagger
@@ -63,6 +72,7 @@ router.get('/', RewardController.findAll);
  *              description: Server error
  *
  */
+
 router.post(
   '/',
   IdMiddleware.identification,

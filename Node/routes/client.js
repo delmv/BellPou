@@ -5,6 +5,7 @@ const AuthoMiddleware = require("../middlewares/Authorization");
 const Router = require("express-promise-router");
 const router = new Router();
 
+
 /**
  * @swagger
  * /client:
@@ -42,12 +43,38 @@ router.get(
  *      responses:
  *          201:
  *              $ref: '#/components/responses/ClientAdded'
+ *          400:
+ *              description: first_name,last_name,birth_date,email,password are required
  *          500:
  *              description: Server error
  *
  */
 
 router.post('/', ClientController.create);
+
+/**
+ * @swagger
+ * /client:
+ *  patch:
+ *      tags:
+ *          - Client
+ *      security:
+ *          - bearerAuth: []
+ *      requestBody:
+ *          $ref: '#/components/requestBodies/ClientToUpdate'
+ *      responses:
+ *          204:
+ *              $ref: '#/components/responses/ClientUpdated'
+ *          400:
+ *              $ref: '#/components/responses/ErrorJWT'
+ *          401:
+ *              $ref: '#/components/responses/MissingJWT'
+ *          500:
+ *              description: Server error
+ *
+ */
+ router.patch('/', IdMiddleware.identification, ClientController.update);
+
 
 /**
  * @swagger
@@ -79,27 +106,5 @@ router.delete(
   ClientController.destroy
 );
 
-/**
- * @swagger
- * /client:
- *  patch:
- *      tags:
- *          - Client
- *      security:
- *          - bearerAuth: []
- *      requestBody:
- *          $ref: '#/components/requestBodies/ClientToUpdate'
- *      responses:
- *          204:
- *              $ref: '#/components/responses/ClientUpdated'
- *          400:
- *              $ref: '#/components/responses/ErrorJWT'
- *          401:
- *              $ref: '#/components/responses/MissingJWT'
- *          500:
- *              description: Server error
- *
- */
-router.patch('/', IdMiddleware.identification, ClientController.update);
 
 module.exports = router;

@@ -9,7 +9,7 @@ const { Sequelize } = require("sequelize");
  * @swagger
  * components:
  *  responses:
- *      PersonalsRewardsFound:
+ *      PersonalRewardsFound:
  *           description: return all the personal reward of the user session
  *           content:
  *               application/json:
@@ -18,27 +18,26 @@ const { Sequelize } = require("sequelize");
  *                      items:
  *                        $ref: '#/components/schemas/PersonalReward'
  */
-module.exports.findAll = async (req, res) => {
-  if (req.session === undefined) {
-    return res.sendStatus(401);
-  }
-  const clientId = req.session.id;
-  if (clientId != null) {
-    try {
-      const clientId = req.session.id;
-      const personal_rewards = await PersonalReward.findAll({
-        where: { client_id: clientId },
-      });
-      res.json(personal_rewards);
 
-    } catch (error) {
-      console.error(error);
-      res.sendStatus(500);
-    }
-  } else {
-    res.sendStatus(404);
+ module.exports.findAll = async (req, res) => {
+  const { page, size } = req.query;
+  const { limit, offset } = getPagination(page, size);
+  const clientId = req.session.id;
+
+  try {
+    const personalsRewards = await PersonalReward.findAndCountAll({
+      where: {client_id: clientId},
+      limit,
+      offset
+    });
+    const reponse = getPagingData(personalsRewards,page,limit);
+    res.json(reponse);
+  } catch (error) {
+    res.sendStatus(500);
   }
 };
+
+
 
 /**
  *@swagger
@@ -92,6 +91,7 @@ module.exports.create = async (req, res) => {
         let date = new Date();
         date.setMonth(date.getMonth() + 2);
         const exp_date = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+
         const personalReward = await PersonalReward.create({
           discount_code,
           exp_date,

@@ -1,6 +1,6 @@
 const Client = require("../models/Client");
 const PersonalReward = require("../models/PersonalReward");
-const { getHash } = require("../utils/utils");
+const { getHash, getPagingData, getPagination } = require("../utils/utils");
 const jwt = require("jsonwebtoken");
 
 const sequelize = require("../sequelize/sequelize");
@@ -21,15 +21,23 @@ const { Sequelize } = require("sequelize");
  *                      items:
  *                        $ref: '#/components/schemas/Client'
  */
+
 module.exports.findAll = async (req, res) => {
+  const { page, size } = req.query;
+  const { limit, offset } = getPagination(page, size);
   try {
-    const clients = await Client.findAll();
-    res.json(clients);
+    const clients = await Client.findAndCountAll({
+      attributes: {exclude:['password']},
+      limit,
+      offset
+    });
+    const reponse = getPagingData(clients,page,limit);
+    res.json(reponse);
   } catch (error) {
-    console.error(error);
     res.sendStatus(500);
   }
 };
+
 
 /**
  *@swagger
@@ -64,6 +72,7 @@ module.exports.findAll = async (req, res) => {
 
 module.exports.create = async (req, res) => {
   const { first_name, last_name, birth_date, email, password } = req.body;
+
   if (
     first_name != undefined &&
     last_name != undefined &&
@@ -121,14 +130,12 @@ module.exports.create = async (req, res) => {
  */
 
 module.exports.update = async (req, res) => {
-  if (req.session === undefined) {
-    return res.sendStatus(401);
-  }
-
   const newData = {};
   const toUpdate = req.body;
   const isManager = req.session.authLevel === "manager";
   let id = null
+  let client = null;
+
   if (isManager) {
     id = toUpdate.id;
   } else {
@@ -222,8 +229,8 @@ module.exports.destroy = async (req, res) => {
         deferrable: Sequelize.Deferrable.SET_DEFERRED,
       },
       async (t) => {
-        await PersonalReward.destroy({ where: { client_id: id } });
-        await Client.destroy({ where: { id } });
+        await PersonalReward.destroy({ where: { client_id: id } }, { transaction: t });
+        await Client.destroy({ where: { id } }, { transaction: t });
         res.sendStatus(204);
       }
     );

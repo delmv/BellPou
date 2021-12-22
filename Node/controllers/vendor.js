@@ -6,18 +6,20 @@ const PositionController = require("../controllers/position");
 const sequelize = require("../sequelize/sequelize");
 const { Sequelize } = require("sequelize");
 const Reward = require("../models/Reward");
-const PersonalReward = require("../models/PersonalReward");
 
 module.exports.findAll = async (req, res) => {
+  const { page, size } = req.query;
+  const { limit, offset } = getPagination(page, size);
+  
   try {
-    const vendor = await Vendor.findAll({
-      include: [Position]
+    const vendors = await Vendor.findAndCountAll({
+      include: [Position],
+      limit,
+      offset
     });
-
-    res.json(vendor);
-
+    const reponse = getPagingData(vendors,page,limit);
+    res.json(reponse);
   } catch (error) {
-    console.error(error);
     res.sendStatus(500);
   }
 };
@@ -55,7 +57,7 @@ module.exports.create = async (req, res) => {
       },
       async (t) => {
 
-        const positionsDB = await PositionController.findOrCreate(position, { transaction: t });
+        const positionsDB = await PositionController.findOrCreate(position, t);
 
         await Vendor.create(
           {
@@ -87,8 +89,8 @@ module.exports.destroy = async (req, res) => {
       async (t) => {
 
         //await PersonalReward.destroy({ where: { reward_id:  } });
-        await Reward.destroy({ where: { vendor_id: id } });
-        await Vendor.destroy({ where: { id } });
+        await Reward.destroy({ where: { vendor_id: id } }, { transaction: t });
+        await Vendor.destroy({ where: { id } }, { transaction: t });
         res.sendStatus(204);
       }
     );

@@ -1,11 +1,12 @@
 const Position = require("../models/Position");
 
-module.exports.findOrCreate = async (position) => {
+module.exports.findOrCreate = async (position, transaction) => {
   return await Position.findOrCreate({
     where: { id: position.id ?? null },
     defaults: {
       coordinate_x: position.coordinate_x,
       coordinate_y: position.coordinate_y
-    }
+    },
+    transaction
   });
 }

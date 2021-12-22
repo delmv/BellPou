@@ -7,7 +7,6 @@ const PositionController = require("../controllers/position");
 
 const sequelize = require("../sequelize/sequelize");
 const { Sequelize } = require("sequelize");
-const { raw } = require("body-parser");
 const { randomString } = require("../utils/utils");
 
 module.exports.findAll = async (req, res) => {
@@ -20,6 +19,22 @@ module.exports.findAll = async (req, res) => {
 
   } catch (error) {
     console.error(error);
+    res.sendStatus(500);
+  }
+};
+
+module.exports.findAllPaging = async (req, res) => {
+  const { page, size } = req.query;
+  const { limit, offset } = getPagination(page, size);
+  try {
+    const trashs = await Trash.findAndCountAll({
+      include: [Position],
+      limit,
+      offset
+    });
+    const reponse = getPagingData(trashs,page,limit);
+    res.json(reponse);
+  } catch (error) {
     res.sendStatus(500);
   }
 };
@@ -56,12 +71,12 @@ module.exports.create = async (req, res) => {
       },
       async (t) => {
 
-        const positionsDB = await PositionController.findOrCreate(position, { transaction: t });
+        const positionsDB = await PositionController.findOrCreate(position, t);
         const qrValue = randomString();
 
         trash = await Trash.create(
           {
-            qr_value: qrValue,
+            qr_code: qrValue,
             position_id: positionsDB[0].id
 
           },
@@ -168,7 +183,7 @@ module.exports.addAdvertisement = async (req, res) => {
       
   } catch (e) {
     if (e.message === "Trash not found in database")
-      res.status(404).json({error: "The QR code passed doesn't exists."});
+      res.status(404).json({ error: "The QR code passed doesn't exists." });
     else {
       console.error(e);
       res.sendStatus(500);
