@@ -22,7 +22,7 @@ const Client = require('./Client')
 const Report = sequelize.define(
     "report",
     {
-        trash_id: {
+        trash: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             references: {
@@ -31,7 +31,7 @@ const Report = sequelize.define(
                 deferrable: Deferrable.INITIALLY_IMMEDIATE()
             }
         },
-        client_id: {
+        client: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             references: {

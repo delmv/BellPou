@@ -32,4 +32,11 @@ router.delete(
   TrashController.destroy
 );
 
+router.post(
+  '/empty',
+  IdMiddleware.identification,
+  AuthoMiddleware.mustBeManager,
+  TrashController.empty
+);
+
 module.exports = router;

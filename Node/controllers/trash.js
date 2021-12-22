@@ -135,30 +135,37 @@ module.exports.destroy = async (req, res) => {
 };
 
 module.exports.addAdvertisement = async (req, res) => {
-  const { qr_code: qrCode } = req.body;
+  const { qr_code } = req.body;
 
   try {
-    
-      const trash = await Trash.findOne({where: {qr_code: qrCode}});
-      const clientId = req.session.id;
 
-      if (trash === null)
+    const trash = await Trash.findOne({where: {qr_code: qr_code}});
+    const clientId = req.session.id;
+
+
+    await sequelize.transaction(
+      {deferrable: Sequelize.Deferrable.SET_DEFERRED},
+      async (t) => {
+        if (trash === null)
         throw new Error("Trash not found in database");
-      
-      await Report.create({
-        trash_id: trash.id,
-        client_id: clientId
-      });
 
-      trash.nb_alerts++;
-      trash.is_full = trash.nb_alerts >= 3;
-      
-      await trash.update({
+        await Report.create({
+        trash: trash.id,
+        client: clientId
+        }, {transaction: t});
+
+        trash.nb_alerts++;
+        trash.is_full = trash.nb_alerts >= 3;
+
+        await trash.update({
         is_full: trash.is_full,
         nb_alerts: trash.nb_alerts
-      });
+        }, {transaction: t});
 
-    res.sendStatus(201);
+        res.sendStatus(201);
+      }
+    )
+      
   } catch (e) {
     if (e.message === "Trash not found in database")
       res.status(404).json({error: "The QR code passed doesn't exists."});
@@ -168,3 +175,49 @@ module.exports.addAdvertisement = async (req, res) => {
     }
   }
 }
+
+module.exports.empty = async (req, res) => {
+
+  const { were_real_reports: wereRealReports, trash_id: trash_id } = req.body
+
+  try {
+
+    const reports = await Report.findAll({where: {trash: trash_id}})
+
+    if (reports !== null) {
+      await sequelize.transaction(
+        {
+          deferrable: Sequelize.Deferrable.SET_DEFERRED
+        },
+        async (t) => {
+          for (let report of reports) {
+            const user = await Client.findOne({where: {id: report.client}});
+
+            if (wereRealReports)
+              await user.update({nb_throins: user.nb_throins + 20}, {transaction: t});
+            else {
+              await user.update({nb_bad_reports: user.nb_bad_reports + 1}, {transaction: t});
+              if (user.nb_bad_reports >= 3) await user.update({is_banned: true}, {transaction: t});
+            }
+
+            await  report.destroy({transaction: t});
+          }
+
+          let date = new Date();
+          date.setMonth(date.getMonth() + 2);
+          const emptyDate = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+          if (wereRealReports) await trashDB.update({last_empty: emptyDate}, {transaction: t})
+            await trashDB.update({nb_alerts: 0, is_full: false}, {transaction: t});
+
+          res.sendStatus(201);
+        }
+      );
+    } else
+      res.sendStatus(404);
+   
+  } catch (e) {
+    console.error(e);
+    res.sendStatus(500);
+  }
+} 
+
