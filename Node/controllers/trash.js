@@ -149,57 +149,16 @@ module.exports.destroy = async (req, res) => {
   }
 };
 
-module.exports.addAdvertisement = async (req, res) => {
-  const { qr_code } = req.body;
-
-  try {
-
-    const trash = await Trash.findOne({where: {qr_code: qr_code}});
-    const clientId = req.session.id;
-
-
-    await sequelize.transaction(
-      {deferrable: Sequelize.Deferrable.SET_DEFERRED},
-      async (t) => {
-        if (trash === null)
-        throw new Error("Trash not found in database");
-
-        await Report.create({
-        trash: trash.id,
-        client: clientId
-        }, {transaction: t});
-
-        trash.nb_alerts++;
-        trash.is_full = trash.nb_alerts >= 3;
-
-        await trash.update({
-        is_full: trash.is_full,
-        nb_alerts: trash.nb_alerts
-        }, {transaction: t});
-
-        res.sendStatus(201);
-      }
-    )
-      
-  } catch (e) {
-    if (e.message === "Trash not found in database")
-      res.status(404).json({ error: "The QR code passed doesn't exists." });
-    else {
-      console.error(e);
-      res.sendStatus(500);
-    }
-  }
-}
 
 module.exports.empty = async (req, res) => {
 
-  const { were_real_reports: wereRealReports, trash_id: trash_id } = req.body
+  const { were_real_reports: wereRealReports, trash_id: trash_id } = req.body;
 
   try {
-
-    const reports = await Report.findAll({where: {trash: trash_id}})
-
-    if (reports !== null) {
+    const trashDB = await Trash.findByPk(trash_id);
+    if(trashDB !== null) {
+      const reports = await Report.findAll({where: {trash: trash_id}})
+    
       await sequelize.transaction(
         {
           deferrable: Sequelize.Deferrable.SET_DEFERRED
@@ -215,7 +174,7 @@ module.exports.empty = async (req, res) => {
               if (user.nb_bad_reports >= 3) await user.update({is_banned: true}, {transaction: t});
             }
 
-            await  report.destroy({transaction: t});
+            await report.destroy({transaction: t});
           }
 
           let date = new Date();
@@ -227,9 +186,9 @@ module.exports.empty = async (req, res) => {
           res.sendStatus(201);
         }
       );
-    } else
-      res.sendStatus(404);
-   
+    }else{
+      res.status(404);
+    }
   } catch (e) {
     console.error(e);
     res.sendStatus(500);
