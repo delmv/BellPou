@@ -1,6 +1,6 @@
 const Client = require("../models/Client");
 const PersonalReward = require("../models/PersonalReward");
-const { getHash, requiredField } = require("../utils/utils");
+const { getHash, getPagingData, getPagination } = require("../utils/utils");
 const jwt = require("jsonwebtoken");
 
 const sequelize = require("../sequelize/sequelize");
@@ -21,14 +21,23 @@ const { Sequelize } = require("sequelize");
  *                      items:
  *                        $ref: '#/components/schemas/Client'
  */
+
 module.exports.findAll = async (req, res) => {
+  const { page, size } = req.query;
+  const { limit, offset } = getPagination(page, size);
   try {
-    const clients = await Client.findAll();
-    res.json(clients);
+    const clients = await Client.findAndCountAll({
+      attributes: {exclude:['password']},
+      limit,
+      offset
+    });
+    const reponse = getPagingData(clients,page,limit);
+    res.json(reponse);
   } catch (error) {
     res.sendStatus(500);
   }
 };
+
 
 /**
  *@swagger

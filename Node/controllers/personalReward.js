@@ -18,27 +18,26 @@ const { Sequelize } = require("sequelize");
  *                      items:
  *                        $ref: '#/components/schemas/PersonalReward'
  */
-module.exports.findAll = async (req, res) => {
-  if (req.session === undefined) {
-    return res.sendStatus(401);
-  }
-  const clientId = req.session.id;
-  if (clientId != null) {
-    try {
-      const clientId = req.session.id;
-      const personal_rewards = await PersonalReward.findAll({
-        where: { client_id: clientId },
-      });
-      res.json(personal_rewards);
 
-    } catch (error) {
-      console.error(error);
-      res.sendStatus(500);
-    }
-  } else {
-    res.sendStatus(404);
+ module.exports.findAll = async (req, res) => {
+  const { page, size } = req.query;
+  const { limit, offset } = getPagination(page, size);
+  const clientId = req.session.id;
+
+  try {
+    const personalsRewards = await PersonalReward.findAndCountAll({
+      where: {client_id: clientId},
+      limit,
+      offset
+    });
+    const reponse = getPagingData(personalsRewards,page,limit);
+    res.json(reponse);
+  } catch (error) {
+    res.sendStatus(500);
   }
 };
+
+
 
 /**
  *@swagger

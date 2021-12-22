@@ -47,6 +47,8 @@ router.get('/:id', RewardController.findOne);
  */
 router.get('/', RewardController.findAll);
 
+router.get('/paging', RewardController.findAllPaging);
+
 /**
  * @swagger
  * /reward:
@@ -70,6 +72,7 @@ router.get('/', RewardController.findAll);
  *              description: Server error
  *
  */
+
 router.post(
   '/',
   IdMiddleware.identification,

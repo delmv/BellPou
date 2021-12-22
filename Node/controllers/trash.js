@@ -23,6 +23,22 @@ module.exports.findAll = async (req, res) => {
   }
 };
 
+module.exports.findAllPaging = async (req, res) => {
+  const { page, size } = req.query;
+  const { limit, offset } = getPagination(page, size);
+  try {
+    const trashs = await Trash.findAndCountAll({
+      include: [Position],
+      limit,
+      offset
+    });
+    const reponse = getPagingData(trashs,page,limit);
+    res.json(reponse);
+  } catch (error) {
+    res.sendStatus(500);
+  }
+};
+
 module.exports.findOne = async (req, res) => {
   const idTexte = req.params.id; //attention ! Il s'agit de texte !
   const id = parseInt(idTexte);

@@ -7,7 +7,11 @@ const router = new Router();
 
 
 router.get('/:id', TrashController.findOne);
+
 router.get('/', TrashController.findAll);
+
+router.get('/paging', TrashController.findAllPaging);
+
 router.patch(
   '/',
   IdMiddleware.identification,

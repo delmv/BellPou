@@ -73,6 +73,21 @@ module.exports.findAll = async (req, res) => {
   }
 };
 
+module.exports.findAllPaging = async (req, res) => {
+  const { page, size } = req.query;
+  const { limit, offset } = getPagination(page, size);
+  try {
+    const rewards = await Reward.findAndCountAll({
+      limit,
+      offset
+    });
+    const reponse = getPagingData(rewards,page,limit);
+    res.json(reponse);
+  } catch (error) {
+    res.sendStatus(500);
+  }
+};
+
 /**
  *@swagger
  *components:
@@ -151,8 +166,8 @@ module.exports.create = async (req, res) => {
     );
     res.sendStatus(201);
   } catch (e) {
-    if (e.message === "Localisation non valide") {
-      res.status(404).json({ error: "La localisation n'est pas valide" });
+    if (e.message === "Localisation not valid") {
+      res.status(404).json({ error: e.message});
     } else {
       console.log(e);
       res.sendStatus(500);
