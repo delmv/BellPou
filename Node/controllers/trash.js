@@ -7,7 +7,6 @@ const PositionController = require("../controllers/position");
 
 const sequelize = require("../sequelize/sequelize");
 const { Sequelize } = require("sequelize");
-const { raw } = require("body-parser");
 const { randomString } = require("../utils/utils");
 
 module.exports.findAll = async (req, res) => {
@@ -56,12 +55,12 @@ module.exports.create = async (req, res) => {
       },
       async (t) => {
 
-        const positionsDB = await PositionController.findOrCreate(position, { transaction: t });
+        const positionsDB = await PositionController.findOrCreate(position, t);
         const qrValue = randomString();
 
         trash = await Trash.create(
           {
-            qr_value: qrValue,
+            qr_code: qrValue,
             position_id: positionsDB[0].id
 
           },
@@ -138,30 +137,30 @@ module.exports.addAdvertisement = async (req, res) => {
   const { qr_code: qrCode } = req.body;
 
   try {
-    
-      const trash = await Trash.findOne({where: {qr_code: qrCode}});
-      const clientId = req.session.id;
 
-      if (trash === null)
-        throw new Error("Trash not found in database");
-      
-      await Report.create({
-        trash_id: trash.id,
-        client_id: clientId
-      });
+    const trash = await Trash.findOne({ where: { qr_code: qrCode } });
+    const clientId = req.session.id;
 
-      trash.nb_alerts++;
-      trash.is_full = trash.nb_alerts >= 3;
-      
-      await trash.update({
-        is_full: trash.is_full,
-        nb_alerts: trash.nb_alerts
-      });
+    if (trash === null)
+      throw new Error("Trash not found in database");
+
+    await Report.create({
+      trash_id: trash.id,
+      client_id: clientId
+    });
+
+    trash.nb_alerts++;
+    trash.is_full = trash.nb_alerts >= 3;
+
+    await trash.update({
+      is_full: trash.is_full,
+      nb_alerts: trash.nb_alerts
+    });
 
     res.sendStatus(201);
   } catch (e) {
     if (e.message === "Trash not found in database")
-      res.status(404).json({error: "The QR code passed doesn't exists."});
+      res.status(404).json({ error: "The QR code passed doesn't exists." });
     else {
       console.error(e);
       res.sendStatus(500);

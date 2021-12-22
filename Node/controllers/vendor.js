@@ -55,7 +55,7 @@ module.exports.create = async (req, res) => {
       },
       async (t) => {
 
-        const positionsDB = await PositionController.findOrCreate(position, { transaction: t });
+        const positionsDB = await PositionController.findOrCreate(position, t);
 
         await Vendor.create(
           {
@@ -87,8 +87,8 @@ module.exports.destroy = async (req, res) => {
       async (t) => {
 
         //await PersonalReward.destroy({ where: { reward_id:  } });
-        await Reward.destroy({ where: { vendor_id: id } });
-        await Vendor.destroy({ where: { id } });
+        await Reward.destroy({ where: { vendor_id: id } }, { transaction: t });
+        await Vendor.destroy({ where: { id } }, { transaction: t });
         res.sendStatus(204);
       }
     );

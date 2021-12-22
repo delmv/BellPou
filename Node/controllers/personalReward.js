@@ -9,7 +9,7 @@ const { Sequelize } = require("sequelize");
  * @swagger
  * components:
  *  responses:
- *      PersonalsRewardsFound:
+ *      PersonalRewardsFound:
  *           description: return all the personal reward of the user session
  *           content:
  *               application/json:
@@ -92,6 +92,7 @@ module.exports.create = async (req, res) => {
         let date = new Date();
         date.setMonth(date.getMonth() + 2);
         const exp_date = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+
         const personalReward = await PersonalReward.create({
           discount_code,
           exp_date,

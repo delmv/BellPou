@@ -1,7 +1,7 @@
 const Router = require('./routes');
 const express = require('express');
 const app = express();
-const port = 3001;
+const port = 3000;
 
 app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
@@ -13,6 +13,6 @@ app.use(express.json());
 app.use(Router);
 
 
-app.listen(port, "192.168.0.111", () => {
+app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
 });
