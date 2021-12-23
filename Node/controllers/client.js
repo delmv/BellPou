@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 
 const sequelize = require("../sequelize/sequelize");
 const { Sequelize } = require("sequelize");
+const { validationResult } = require("express-validator");
 
 /**
  * @swagger
@@ -110,15 +111,14 @@ module.exports.findAll = async (req, res) => {
 
 
 module.exports.create = async (req, res) => {
-  const { first_name, last_name, birth_date, email, password } = req.body;
 
-  if (
-    first_name != undefined &&
-    last_name != undefined &&
-    birth_date != undefined &&
-    email != undefined &&
-    password != undefined
-  ) {
+  const errors = validationResult(req);
+  if (!errors.isEmpty())
+    res.status(400).json({errors: errors.array() })
+  else {
+
+    const { first_name, last_name, birth_date, email, password } = req.body;
+
     try {
       const hashedPassword = await getHash(password);
       const client = await Client.create({
@@ -147,11 +147,9 @@ module.exports.create = async (req, res) => {
       console.error(error);
       res.sendStatus(500);
     }
-  } else {
-    res.status(400).json({
-      error: "first_name,last_name,birth_date,email,password are required",
-    });
   }
+
+  
 };
 
 /**
@@ -169,78 +167,85 @@ module.exports.create = async (req, res) => {
  */
 
 module.exports.update = async (req, res) => {
-  const newData = {};
-  const toUpdate = req.body;
-  const isManager = req.session.authLevel === "manager";
-  let id = null
-  let client = null;
 
-  if (isManager) {
-    id = toUpdate.id;
-  } else {
-    let client = req.session;
-    id = client.id;
-  }
-
-  try {
-    client = await Client.findByPk(id);
-    if (client == null) {
-      req.sendStatus(404);
+  const errors = validationResult(req);
+  if (!errors.isEmpty())
+    res.status(400).json({errors: errors.array() })
+  else {
+    
+    const newData = {};
+    const toUpdate = req.body;
+    const isManager = req.session.authLevel === "manager";
+    let id = null
+    let client = null;
+  
+    if (isManager) {
+      id = toUpdate.id;
     } else {
-      newData.first_name = toUpdate.first_name
-        ? toUpdate.first_name
-        : client.first_name;
-
-      newData.last_name = toUpdate.last_name
-        ? toUpdate.last_name
-        : client.last_name;
-
-      newData.birth_date = toUpdate.birth_date
-        ? toUpdate.birth_date
-        : client.birth_date;
-
-      newData.email = toUpdate.email ? toUpdate.email : client.email;
-
-      if (toUpdate.password != undefined) {
-        const hashedPassword = await getHash(toUpdate.password);
-        newData.password = hashedPassword;
-      } else {
-        newData.password = client.password
-      }
-
-      if (isManager) {
-        newData.nb_throins = toUpdate.nb_throins
-          ? toUpdate.nb_throins
-          : client.nb_throins;
-
-        newData.nb_bad_reports = toUpdate.nb_bad_reports
-          ? toUpdate.nb_bad_reports
-          : client.nb_bad_reports;
-
-        newData.is_banned = toUpdate.is_banned
-          ? toUpdate.is_banned
-          : client.is_banned;
-      } else {
-        newData.nb_throins = client.nb_throins;
-        newData.nb_bad_reports = client.nb_bad_reports;
-        newData.is_banned = client.is_banned;
-      }
-
-      await client.update({
-        first_name: newData.first_name,
-        last_name: newData.last_name,
-        password: newData.password,
-        birth_date: newData.birth_date,
-        email: newData.email,
-        nb_throins: newData.nb_throins,
-        nb_bad_reports: newData.nb_bad_reports,
-        is_banned: newData.is_banned,
-      });
-      res.sendStatus(204);
+      let client = req.session;
+      id = client.id;
     }
-  } catch (e) {
-    console.error(e);
-    res.sendStatus(500);
+  
+    try {
+      client = await Client.findByPk(id);
+      if (client == null) {
+        res.sendStatus(404);
+      } else {
+        newData.first_name = toUpdate.first_name
+          ? toUpdate.first_name
+          : client.first_name;
+  
+        newData.last_name = toUpdate.last_name
+          ? toUpdate.last_name
+          : client.last_name;
+  
+        newData.birth_date = toUpdate.birth_date
+          ? toUpdate.birth_date
+          : client.birth_date;
+  
+        newData.email = toUpdate.email ? toUpdate.email : client.email;
+  
+        if (toUpdate.password != undefined) {
+          const hashedPassword = await getHash(toUpdate.password);
+          newData.password = hashedPassword;
+        } else {
+          newData.password = client.password
+        }
+  
+        if (isManager) {
+          newData.nb_throins = toUpdate.nb_throins
+            ? toUpdate.nb_throins
+            : client.nb_throins;
+  
+          newData.nb_bad_reports = toUpdate.nb_bad_reports
+            ? toUpdate.nb_bad_reports
+            : client.nb_bad_reports;
+  
+          newData.is_banned = toUpdate.is_banned
+            ? toUpdate.is_banned
+            : client.is_banned;
+        } else {
+          newData.nb_throins = client.nb_throins;
+          newData.nb_bad_reports = client.nb_bad_reports;
+          newData.is_banned = client.is_banned;
+        }
+  
+        await client.update({
+          first_name: newData.first_name,
+          last_name: newData.last_name,
+          password: newData.password,
+          birth_date: newData.birth_date,
+          email: newData.email,
+          nb_throins: newData.nb_throins,
+          nb_bad_reports: newData.nb_bad_reports,
+          is_banned: newData.is_banned,
+        });
+        res.sendStatus(204);
+      }
+    } catch (e) {
+      console.error(e);
+      res.sendStatus(500);
+    }
   }
 };
 

@@ -1,6 +1,7 @@
 const VendorController = require("../controllers/vendor");
 const IdMiddleware = require("../middlewares/Identification.js");
 const AuthoMiddleware = require("../middlewares/Authorization");
+const Validator = require("../middlewares/express-validator/vendor")
 
 const Router = require("express-promise-router");
 const router = new Router();
@@ -84,8 +85,10 @@ router.get('/', VendorController.findAll);
  *              description: Server error
  *
  */
+
 router.post(
   '/',
+  Validator.postVerification,
   IdMiddleware.identification,
   AuthoMiddleware.mustBeManager,
   VendorController.create
@@ -116,6 +119,7 @@ router.post(
  */
 router.delete(
   '/',
+  Validator.destroyVerification,
   IdMiddleware.identification,
   AuthoMiddleware.mustBeManager,
   VendorController.destroy

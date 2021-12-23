@@ -1,6 +1,7 @@
 const ClientController = require("../controllers/client");
 const IdMiddleware = require("../middlewares/Identification.js");
 const AuthoMiddleware = require("../middlewares/Authorization");
+const Validator = require("../middlewares/express-validator/client")
 
 const Router = require("express-promise-router");
 const router = new Router();
@@ -75,7 +76,7 @@ router.get(
  *
  */
 
-router.post('/', ClientController.create);
+router.post('/', Validator.postValidation, ClientController.create);
 
 /**
  * @swagger
@@ -104,7 +105,7 @@ router.post('/', ClientController.create);
  *              description: Server error
  *
  */
- router.patch('/', IdMiddleware.identification, ClientController.update);
+ router.patch('/', Validator.patchValidation, IdMiddleware.identification, ClientController.update);
 
 
 /**

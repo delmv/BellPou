@@ -1,6 +1,8 @@
 const PersonalRewardController = require("../controllers/personalReward");
 const IdMiddleware = require("../middlewares/Identification.js");
 const AuthoMiddleware = require("../middlewares/Authorization");
+const Validator = require("../middlewares/express-validator/personalReward")
+
 
 const Router = require("express-promise-router");
 const router = new Router();
@@ -67,7 +69,10 @@ router.get(
  *              description: Server error
  *
  */
-router.post('/', IdMiddleware.identification, PersonalRewardController.create);
+router.post('/',
+    Validator.postVerification,
+    IdMiddleware.identification,
+    PersonalRewardController.create);
 
 /**
  * @swagger
@@ -92,6 +97,7 @@ router.post('/', IdMiddleware.identification, PersonalRewardController.create);
  */
 router.delete(
   '/',
+  Validator.destroyVerification,
   IdMiddleware.identification,
   PersonalRewardController.destroy
 );
