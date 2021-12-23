@@ -1,6 +1,7 @@
 const RewardController = require("../controllers/reward");
 const IdMiddleware = require("../middlewares/Identification.js");
 const AuthoMiddleware = require("../middlewares/Authorization");
+const Validator = require("../middlewares/express-validator/reward")
 
 const Router = require("express-promise-router");
 const router = new Router();
@@ -75,6 +76,7 @@ router.get('/paging', RewardController.findAllPaging);
 
 router.post(
   '/',
+  Validator.postValidation,
   IdMiddleware.identification,
   AuthoMiddleware.mustBeManager,
   RewardController.create
@@ -105,6 +107,7 @@ router.post(
  */
 router.delete(
   '/',
+  Validator.deleteValidation,
   IdMiddleware.identification,
   AuthoMiddleware.mustBeManager,
   RewardController.destroy
