@@ -8,6 +8,7 @@ const PositionController = require("../controllers/position");
 const sequelize = require("../sequelize/sequelize");
 const { Sequelize } = require("sequelize");
 const { randomString } = require("../utils/utils");
+const {validationResult} = require("express-validator");
 
 module.exports.findAll = async (req, res) => {
   try {
@@ -62,175 +63,198 @@ module.exports.findOne = async (req, res) => {
 };
 
 module.exports.create = async (req, res) => {
-  const { position } = req.body;
-  let trash = null;
-  try {
-    await sequelize.transaction(
-      {
-        deferrable: Sequelize.Deferrable.SET_DEFERRED,
-      },
-      async (t) => {
-
-        const positionsDB = await PositionController.findOrCreate(position, t);
-        const qrValue = randomString();
-
-        trash = await Trash.create(
+  const errors = validationResult(req);
+  if (!errors.isEmpty())
+    res.status(400).json({errors: errors.array() })
+  else {
+    const { position } = req.body;
+    let trash = null;
+    try {
+      await sequelize.transaction(
           {
-            qr_code: qrValue,
-            position_id: positionsDB[0].id
-
+            deferrable: Sequelize.Deferrable.SET_DEFERRED,
           },
-          { transaction: t }
-        );
-      }
-    );
-    res.json(trash);
-  } catch (e) {
-    console.log(e);
-    res.sendStatus(500);
+          async (t) => {
+
+            const positionsDB = await PositionController.findOrCreate(position, t);
+            const qrValue = randomString();
+
+            trash = await Trash.create(
+                {
+                  qr_code: qrValue,
+                  position_id: positionsDB[0].id
+
+                },
+                { transaction: t }
+            );
+          }
+      );
+      res.json(trash);
+    } catch (e) {
+      console.log(e);
+      res.sendStatus(500);
+    }
   }
 };
 
 module.exports.update = async (req, res) => {
-  if (req.session === undefined) {
-    return res.sendStatus(401);
-  }
-
-  const newData = {};
-  const toUpdate = req.body;
-  try {
-    const trash = await Trash.findByPk(toUpdate.id);
-    if (trash == null) {
-      req.sendStatus(404);
-    } else {
-      newData.is_full = toUpdate.is_full
-        ? toUpdate.is_full
-        : trash.is_full;
-
-      newData.nb_alerts = toUpdate.nb_alerts
-        ? toUpdate.nb_alerts
-        : trash.nb_alerts;
-
-      newData.last_empty = toUpdate.last_empty
-        ? toUpdate.last_empty
-        : trash.last_empty;
-
-      newData.qr_value = toUpdate.qr_value
-        ? toUpdate.qr_value
-        : trash.qr_value;
-
-      newData.position_id = toUpdate.position_id
-        ? toUpdate.position_id
-        : trash.position_id;
-
-      await trash.update({
-        is_full: newData.is_full,
-        nb_alerts: newData.nb_alerts,
-        last_empty: newData.last_empty,
-        qr_value: newData.qr_value,
-        position_id: newData.position_id,
-      });
-      res.sendStatus(204);
+  const errors = validationResult(req);
+  if (!errors.isEmpty())
+    res.status(400).json({errors: errors.array() })
+  else {
+    if (req.session === undefined) {
+      return res.sendStatus(401);
     }
-  } catch (e) {
-    console.error(e);
-    res.sendStatus(500);
+    const newData = {};
+    const toUpdate = req.body;
+    try {
+      const trash = await Trash.findByPk(toUpdate.id);
+      if (trash == null) {
+        req.sendStatus(404);
+      } else {
+        newData.is_full = toUpdate.is_full
+            ? toUpdate.is_full
+            : trash.is_full;
+
+        newData.nb_alerts = toUpdate.nb_alerts
+            ? toUpdate.nb_alerts
+            : trash.nb_alerts;
+
+        newData.last_empty = toUpdate.last_empty
+            ? toUpdate.last_empty
+            : trash.last_empty;
+
+        newData.qr_value = toUpdate.qr_value
+            ? toUpdate.qr_value
+            : trash.qr_value;
+
+        newData.position_id = toUpdate.position_id
+            ? toUpdate.position_id
+            : trash.position_id;
+
+        await trash.update({
+          is_full: newData.is_full,
+          nb_alerts: newData.nb_alerts,
+          last_empty: newData.last_empty,
+          qr_value: newData.qr_value,
+          position_id: newData.position_id,
+        });
+        res.sendStatus(204);
+      }
+    } catch (e) {
+      console.error(e);
+      res.sendStatus(500);
+    }
   }
 };
 
 module.exports.destroy = async (req, res) => {
-  const { id } = req.body;
-  try {
-    await Trash.destroy({ where: { id } });
-    res.sendStatus(204);
-  } catch (error) {
-    console.error(error);
-    res.sendStatus(500);
+  const errors = validationResult(req);
+  if (!errors.isEmpty())
+    res.status(400).json({errors: errors.array() })
+  else {
+    const { id } = req.body;
+    try {
+      await Trash.destroy({ where: { id } });
+      res.sendStatus(204);
+    } catch (error) {
+      console.error(error);
+      res.sendStatus(500);
+    }
   }
 };
 
 module.exports.addAdvertisement = async (req, res) => {
-  const { qr_code } = req.body;
+  const errors = validationResult(req);
+  if (!errors.isEmpty())
+    res.status(400).json({errors: errors.array() })
+  else {
+    const { qr_code } = req.body;
 
-  try {
+    try {
 
-    const trash = await Trash.findOne({where: {qr_code: qr_code}});
-    const clientId = req.session.id;
+      const trash = await Trash.findOne({where: {qr_code: qr_code}});
+      const clientId = req.session.id;
 
 
-    await sequelize.transaction(
-      {deferrable: Sequelize.Deferrable.SET_DEFERRED},
-      async (t) => {
-        if (trash === null)
-        throw new Error("Trash not found in database");
+      await sequelize.transaction(
+          {deferrable: Sequelize.Deferrable.SET_DEFERRED},
+          async (t) => {
+            if (trash === null)
+              throw new Error("Trash not found in database");
 
-        await Report.create({
-        trash: trash.id,
-        client: clientId
-        }, {transaction: t});
+            await Report.create({
+              trash: trash.id,
+              client: clientId
+            }, {transaction: t});
 
-        trash.nb_alerts++;
-        trash.is_full = trash.nb_alerts >= 3;
+            trash.nb_alerts++;
+            trash.is_full = trash.nb_alerts >= 3;
 
-        await trash.update({
-        is_full: trash.is_full,
-        nb_alerts: trash.nb_alerts
-        }, {transaction: t});
+            await trash.update({
+              is_full: trash.is_full,
+              nb_alerts: trash.nb_alerts
+            }, {transaction: t});
 
-        res.sendStatus(201);
+            res.sendStatus(201);
+          }
+      )
+
+    } catch (e) {
+      if (e.message === "Trash not found in database")
+        res.status(404).json({ error: "The QR code passed doesn't exists." });
+      else {
+        console.error(e);
+        res.sendStatus(500);
       }
-    )
-      
-  } catch (e) {
-    if (e.message === "Trash not found in database")
-      res.status(404).json({ error: "The QR code passed doesn't exists." });
-    else {
-      console.error(e);
-      res.sendStatus(500);
     }
   }
 }
 
 module.exports.empty = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty())
+    res.status(400).json({errors: errors.array() })
+  else {
+    const { were_real_reports: wereRealReports, trash_id: trash_id } = req.body
 
-  const { were_real_reports: wereRealReports, trash_id: trash_id } = req.body
+    try {
+      const reports = await Report.findAll({where: {trash: trash_id}})
+      if (reports !== null) {
+        await sequelize.transaction(
+            {
+              deferrable: Sequelize.Deferrable.SET_DEFERRED
+            },
+            async (t) => {
+              for (let report of reports) {
+                const user = await Client.findOne({where: {id: report.client}});
 
-  try {
-    const reports = await Report.findAll({where: {trash: trash_id}})
-    if (reports !== null) {
-      await sequelize.transaction(
-        {
-          deferrable: Sequelize.Deferrable.SET_DEFERRED
-        },
-        async (t) => {
-          for (let report of reports) {
-            const user = await Client.findOne({where: {id: report.client}});
+                if (wereRealReports)
+                  await user.update({nb_throins: user.nb_throins + 20}, {transaction: t});
+                else {
+                  await user.update({nb_bad_reports: user.nb_bad_reports + 1}, {transaction: t});
+                  if (user.nb_bad_reports >= 3) await user.update({is_banned: true}, {transaction: t});
+                }
 
-            if (wereRealReports)
-              await user.update({nb_throins: user.nb_throins + 20}, {transaction: t});
-            else {
-              await user.update({nb_bad_reports: user.nb_bad_reports + 1}, {transaction: t});
-              if (user.nb_bad_reports >= 3) await user.update({is_banned: true}, {transaction: t});
+                await  report.destroy({transaction: t});
+              }
+
+              let date = new Date();
+              date.setMonth(date.getMonth() + 2);
+              const emptyDate = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+              if (wereRealReports) await trashDB.update({last_empty: emptyDate}, {transaction: t})
+              await trashDB.update({nb_alerts: 0, is_full: false}, {transaction: t});
+
+              res.sendStatus(201);
             }
+        );
+      } else
+        res.sendStatus(404);
 
-            await  report.destroy({transaction: t});
-          }
-
-          let date = new Date();
-          date.setMonth(date.getMonth() + 2);
-          const emptyDate = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-          if (wereRealReports) await trashDB.update({last_empty: emptyDate}, {transaction: t})
-            await trashDB.update({nb_alerts: 0, is_full: false}, {transaction: t});
-
-          res.sendStatus(201);
-        }
-      );
-    } else
-      res.sendStatus(404);
-   
-  } catch (e) {
-    console.error(e);
-    res.sendStatus(500);
+    } catch (e) {
+      console.error(e);
+      res.sendStatus(500);
+    }
   }
 } 
 

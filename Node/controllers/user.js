@@ -6,6 +6,8 @@ const Client = require("../models/Client");
 const Manager = require("../models/Manager");
 const { compareHash } = require("../utils/utils");
 
+const {validationResult} = require("express-validator");
+
 module.exports.getUser = async (email, password) => {
   const client = await Client.findOne({ where: { email } });
   const manager = await Manager.findOne({ where: { email } });
@@ -19,10 +21,11 @@ module.exports.getUser = async (email, password) => {
 };
 
 module.exports.login = async (req, res) => {
-  const { email, password } = req.body;
-  if (email === undefined || password === undefined) {
-    res.sendStatus(400);
-  } else {
+  const errors = validationResult(req);
+  if (!errors.isEmpty())
+    res.status(400).json({errors: errors.array() })
+  else {
+    const { email, password } = req.body;
     try {
       const result = await this.getUser(email, password);
       const { userType, value } = result;
