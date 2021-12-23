@@ -11,14 +11,37 @@ const { Sequelize } = require("sequelize");
 /**
  * @swagger
  * components:
- *  responses:
- *      RewardFound:
- *           description: return a reward
- *           content:
- *               application/json:
- *                   schema:
- *                       $ref: '#/models/schemas/Reward'
+ *  schemas:
+ *      Reward:
+ *          type: object
+ *          properties:
+ *              id:
+ *                  type: integer
+ *              name_fr:
+ *                  type: string
+ *              name_en:
+ *                  type: string
+ *              description_fr:
+ *                  type: string
+ *              description_en:
+ *                  type: string
+ *              throins_cost:
+ *                  type: integer
+ *              real_cost:
+ *                  type: number
+ *                  format: float
+ *              vendor_id:
+ *                  type: integer
+ *          required:
+ *              - name_fr
+ *              - name_en
+ *              - description_fr
+ *              - description_en
+ *              - throins_cost
+ *              - real_cost
+ *              - vendor_id
  */
+
 
 /**
  * @swagger
@@ -73,6 +96,19 @@ module.exports.findAll = async (req, res) => {
   }
 };
 
+/**
+ * @swagger
+ * components:
+ *  responses:
+ *      RewardsFound:
+ *           description: return un array of Rewards
+ *           content:
+ *               application/json:
+ *                   schema:
+ *                      type: array
+ *                      items:
+ *                        $ref: '#/components/schemas/Reward'
+ */
 module.exports.findAllPaging = async (req, res) => {
   const { page, size } = req.query;
   const { limit, offset } = getPagination(page, size);
@@ -88,37 +124,7 @@ module.exports.findAllPaging = async (req, res) => {
   }
 };
 
-/**
- *@swagger
- *components:
- *  responses:
- *      RewardAdded:
- *          description: The Reward has been added
- *  requestBodies:
- *      RewardToAdd:
- *          content:
- *              application/json:
- *                  schema:
- *                      type: object
- *                      properties:
- *                          name_fr:
- *                              type: string
- *                          name_en:
- *                              type: string
- *                          description_fr:
- *                              type: string
- *                          description_en:
- *                              type: string
- *                          throins_cost:
- *                              type: integer
- *                          real_cost:
- *                              type: number
- *                              format: float
- *                          vendor:
- *                               type: object
- *                               $ref: "#/components/schemas/Vendor" 
- *                                  
- */
+
 module.exports.create = async (req, res) => {
   const {
     name_fr,
@@ -175,6 +181,24 @@ module.exports.create = async (req, res) => {
   }
 };
 
+/**
+ *@swagger
+ *components:
+ *  responses:
+ *      RewardDeleted:
+ *          description: The Reward has been deleted
+ *  requestBodies:
+ *      RewardToDelete:
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          id:
+ *                              type: integer
+ *          required:
+ *              - id
+ */
 module.exports.destroy = async (req, res) => {
   const { id } = req.body;
   try {

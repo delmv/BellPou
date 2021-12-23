@@ -7,6 +7,40 @@ const sequelize = require("../sequelize/sequelize");
 const { Sequelize } = require("sequelize");
 const Reward = require("../models/Reward");
 
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *      Vendor:
+ *          type: object
+ *          properties:
+ *              id:
+ *                  type: integer
+ *              name_fr:
+ *                  type: string
+ *              name_en:
+ *                  type: string
+ *              description_fr:
+ *                  type: string
+ *              description_en:
+ *                  type: string
+ *              throins_cost:
+ *                  type: integer
+ *              real_cost:
+ *                  type: number
+ *                  format: float
+ *              position_id:
+ *                  type: integer
+ *                  $ref: "#/components/schemas/Position"
+ *          required:
+ *              - name_fr
+ *              - name_en
+ *              - description_fr
+ *              - description_en
+ *              - position_id
+ */
+
+
 module.exports.findAll = async (req, res) => {
   const { page, size } = req.query;
   const { limit, offset } = getPagination(page, size);
@@ -24,6 +58,17 @@ module.exports.findAll = async (req, res) => {
   }
 };
 
+/**
+ * @swagger
+ * components:
+ *  responses:
+ *      VendorFound:
+ *           description: return a Vendor
+ *           content:
+ *               application/json:
+ *                   schema:
+ *                       $ref: '#/components/schemas/Vendor'
+ */
 module.exports.findOne = async (req, res) => {
   const idTexte = req.params.id; //attention ! Il s'agit de texte !
   const id = parseInt(idTexte);
@@ -78,7 +123,24 @@ module.exports.create = async (req, res) => {
   }
 };
 
-
+/**
+ *@swagger
+ *components:
+ *  responses:
+ *      VendorDeleted:
+ *          description: The Vendor has been deleted
+ *  requestBodies:
+ *      VendorToDelete:
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          id:
+ *                              type: integer
+ *          required:
+ *              - id
+ */
 module.exports.destroy = async (req, res) => {
   const { id } = req.body;
   try {
@@ -88,7 +150,6 @@ module.exports.destroy = async (req, res) => {
       },
       async (t) => {
 
-        //await PersonalReward.destroy({ where: { reward_id:  } });
         await Reward.destroy({ where: { vendor_id: id } }, { transaction: t });
         await Vendor.destroy({ where: { id } }, { transaction: t });
         res.sendStatus(204);

@@ -1,45 +1,6 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../sequelize/sequelize");
 
-/**
- * @swagger
- * components:
- *  schemas:
- *      Client:
- *          type: object
- *          properties:
- *              id:
- *                  type: integer
- *              first_name:
- *                  type: string
- *              last_name:
- *                  type: string
- *              birth_date:
- *                  type: string
- *                  format: date
- *              nb_throins:
- *                  type: integer
- *              email:
- *                  type: string
- *                  format: email
- *              password:
- *                  type: string
- *                  format: password
- *              nb_bad_report:
- *                  type: integer
- *                  minimum: 0
- *              is_banned:
- *                  type: boolean
- *          required:
- *              - first_name
- *              - last_name
- *              - birth_date
- *              - nb_throins
- *              - email
- *              - password
- *              - nb_bad_report
- *              - is_banned
- */
 
 const Client = sequelize.define(
   "client",

@@ -6,7 +6,41 @@ const jwt = require("jsonwebtoken");
 const sequelize = require("../sequelize/sequelize");
 const { Sequelize } = require("sequelize");
 
-
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *      Client:
+ *          type: object
+ *          properties:
+ *              id:
+ *                  type: integer
+ *              first_name:
+ *                  type: string
+ *              last_name:
+ *                  type: string
+ *              birth_date:
+ *                  type: string
+ *                  format: date
+ *              nb_throins:
+ *                  type: integer
+ *              email:
+ *                  type: string
+ *                  format: email
+ *              nb_bad_report:
+ *                  type: integer
+ *                  minimum: 0
+ *              is_banned:
+ *                  type: boolean
+ *          required:
+ *              - first_name
+ *              - last_name
+ *              - birth_date
+ *              - nb_throins
+ *              - email
+ *              - nb_bad_report
+ *              - is_banned
+ */
 
 /**
  * @swagger
@@ -59,14 +93,19 @@ module.exports.findAll = async (req, res) => {
  *                          birth_date:
  *                              type: string
  *                              format: date
- *                          nb_throins:
- *                              type: integer
  *                          email:
  *                              type: string
  *                              format: email
  *                          password:
  *                              type: string
  *                              format: password
+ *          required:
+ *              - first_name
+ *              - last_name
+ *              - birth_date
+ *              - email
+ *              - nb_bad_report
+ *              - is_banned
  */
 
 
@@ -220,6 +259,8 @@ module.exports.update = async (req, res) => {
  *                      properties:
  *                          id:
  *                              type: integer
+ *          required:
+ *              - id
  */
 module.exports.destroy = async (req, res) => {
   const { id } = req.body;

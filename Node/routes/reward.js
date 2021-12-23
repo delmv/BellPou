@@ -38,14 +38,45 @@ router.get('/:id', RewardController.findOne);
  *         - Reward
  *      responses:
  *          200:
- *              $ref: '#/components/responses/RewardsFound'
- *          404:
- *              description: client not found || reward not found || too poor
+ *              $ref: '#/components/responses/RewardFound'
  *          500:
  *              description: Server error
  *
  */
 router.get('/', RewardController.findAll);
+
+/**
+ * @swagger
+ * /reward/paging:
+ *  get:
+ *      tags:
+ *         - Reward
+ *      parameters:
+ *        - in: query
+ *          name: page
+ *          schema: 
+ *            type: integer
+ *          description: The number of items to skip before starting to collect the result set
+ *        - in: query
+ *          name: size
+ *          schema: 
+ *            type: integer
+ *          description: The numbers of items to return
+ *      responses:
+ *          200:
+ *              $ref: '#/components/responses/RewardsFound'
+ *          400:
+ *            description: client error
+ *            content:
+ *              application/json:
+ *                schema:
+ *                  oneOf:
+ *                    - $ref: '#/components/responses/Valentin'
+ *                    - $ref: '#/components/responses/Valentin'
+ *          500:
+ *              description: Server error
+ *
+ */
 
 router.get('/paging', RewardController.findAllPaging);
 
@@ -63,7 +94,13 @@ router.get('/paging', RewardController.findAllPaging);
  *          201:
  *              $ref: '#/components/responses/RewardAdded'
  *          400:
- *              $ref: '#/components/responses/ErrorJWT'
+ *            description: client error
+ *            content:
+ *              application/json:
+ *                schema:
+ *                  oneOf:
+ *                    - $ref: '#/components/responses/ErrorJWT'
+ *                    - $ref: '#/components/responses/Valentin'
  *          401:
  *              $ref: '#/components/responses/MissingJWT' 
  *          403:

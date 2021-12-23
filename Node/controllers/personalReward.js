@@ -8,6 +8,35 @@ const { Sequelize } = require("sequelize");
 /**
  * @swagger
  * components:
+ *  schemas:
+ *      PersonalReward:
+ *          type: object
+ *          properties:
+ *              id:
+ *                  type: integer
+ *              discount_code:
+ *                  type: string
+ *              exp_date:
+ *                  type: string
+ *                  format: date
+ *              is_used:
+ *                  type: boolean
+ *              client_id:
+ *                  type: integer
+ *              reward_id:
+ *                  type: integer
+ *          required:
+ *              - discount_code
+ *              - exp_date
+ *              - is_used
+ *              - client_id
+ *              - reward_id
+ */
+
+
+/**
+ * @swagger
+ * components:
  *  responses:
  *      PersonalRewardsFound:
  *           description: return all the personal reward of the user session
@@ -54,6 +83,8 @@ const { Sequelize } = require("sequelize");
  *                      properties:
  *                          reward_id:
  *                              type: integer
+ *          required:
+ *              - reward_id
  */
 
 
@@ -125,6 +156,8 @@ module.exports.create = async (req, res) => {
  *                      properties:
  *                          id:
  *                              type: integer
+ *          required:
+ *              - id
  */
 module.exports.destroy = async (req, res) => {
   const { id } = req.body;

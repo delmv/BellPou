@@ -9,6 +9,37 @@ const sequelize = require("../sequelize/sequelize");
 const { Sequelize } = require("sequelize");
 const { randomString } = require("../utils/utils");
 
+
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *      Trash:
+ *          type: object
+ *          properties:
+ *              id:
+ *                  type: integer
+ *              is_full:
+ *                  type: boolean
+ *              nb_alerts:
+ *                  type: integer
+ *              last_empty:
+ *                  type: string
+ *                  format: date
+ *              qr_code:
+ *                  type: string
+ *              position_id:
+ *                  type: integer
+ *                  $ref: "#/components/schemas/Position"
+ *          required:
+ *              - is_full
+ *              - nb_alerts
+ *              - last_empty
+ *              - qr_code
+ *              - position_id
+ */
+
+
 module.exports.findAll = async (req, res) => {
   try {
     const trashs = await Trash.findAll({
@@ -39,6 +70,17 @@ module.exports.findAllPaging = async (req, res) => {
   }
 };
 
+/**
+ * @swagger
+ * components:
+ *  responses:
+ *      TrashFound:
+ *           description: return a Trash
+ *           content:
+ *               application/json:
+ *                   schema:
+ *                       $ref: '#/components/schemas/Trash'
+ */
 module.exports.findOne = async (req, res) => {
   const idTexte = req.params.id; //attention ! Il s'agit de texte !
   const id = parseInt(idTexte);
@@ -138,6 +180,24 @@ module.exports.update = async (req, res) => {
   }
 };
 
+/**
+ *@swagger
+ *components:
+ *  responses:
+ *      TrashDeleted:
+ *          description: The Trash has been deleted
+ *  requestBodies:
+ *      TrashToDelete:
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          id:
+ *                              type: integer
+ *          required:
+ *              - id
+ */
 module.exports.destroy = async (req, res) => {
   const { id } = req.body;
   try {

@@ -4,38 +4,7 @@ const Position = require("./Position");
 
 
 
-/**
- * @swagger
- * components:
- *  schemas:
- *      Vendor:
- *          type: object
- *          properties:
- *              id:
- *                  type: integer
- *              name_fr:
- *                  type: string
- *              name_en:
- *                  type: string
- *              description_fr:
- *                  type: string
- *              description_en:
- *                  type: string
- *              throins_cost:
- *                  type: integer
- *              real_cost:
- *                  type: number
- *                  format: float
- *              position_id:
- *                  type: integer
- *                  $ref: "#/components/schemas/Position"
- *          required:
- *              - name_fr
- *              - name_en
- *              - description_fr
- *              - description_en
- *              - position_id
- */
+
 
 const Vendor = sequelize.define(
   "vendor",

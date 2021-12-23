@@ -12,11 +12,30 @@ const router = new Router();
  *  get:
  *      tags:
  *         - Client
+ *      security:
+ *          - bearerAuth: []
+ *      parameters:
+ *        - in: query
+ *          name: page
+ *          schema: 
+ *            type: integer
+ *          description: The number of items to skip before starting to collect the result set
+ *        - in: query
+ *          name: size
+ *          schema: 
+ *            type: integer
+ *          description: The numbers of items to return
  *      responses:
  *          200:
  *              $ref: '#/components/responses/ClientsFound'
  *          400:
- *              $ref: '#/components/responses/ErrorJWT'
+ *            description: client error
+ *            content:
+ *              application/json:
+ *                schema:
+ *                  oneOf:
+ *                    - $ref: '#/components/responses/ErrorJWT'
+ *                    - $ref: '#/components/responses/Valentin'
  *          401:
  *              $ref: '#/components/responses/MissingJWT'
  *          403:
@@ -44,7 +63,13 @@ router.get(
  *          201:
  *              $ref: '#/components/responses/ClientAdded'
  *          400:
- *              description: first_name,last_name,birth_date,email,password are required
+ *            description: client error
+ *            content:
+ *              application/json:
+ *                schema:
+ *                  oneOf:
+ *                    - $ref: '#/components/responses/Valentin'
+ *                    - $ref: '#/components/responses/Valentin'
  *          500:
  *              description: Server error
  *
@@ -66,7 +91,13 @@ router.post('/', ClientController.create);
  *          204:
  *              $ref: '#/components/responses/ClientUpdated'
  *          400:
- *              $ref: '#/components/responses/ErrorJWT'
+ *            description: client error
+ *            content:
+ *              application/json:
+ *                schema:
+ *                  oneOf:
+ *                    - $ref: '#/components/responses/ErrorJWT'
+ *                    - $ref: '#/components/responses/Valentin'
  *          401:
  *              $ref: '#/components/responses/MissingJWT'
  *          500:
@@ -82,6 +113,7 @@ router.post('/', ClientController.create);
  *  delete:
  *      tags:
  *          - Client
+ *      summary: delete a client
  *      security:
  *          - bearerAuth: []
  *      requestBody:
@@ -90,7 +122,13 @@ router.post('/', ClientController.create);
  *          200:
  *              $ref: '#/components/responses/ClientDeleted'
  *          400:
- *              $ref: '#/components/responses/ErrorJWT'
+ *            content:
+ *            description: client error
+ *              application/json:
+ *                schema:
+ *                  oneOf:
+ *                    - $ref: '#/components/responses/ErrorJWT'
+ *                    - $ref: '#/components/responses/Valentin'
  *          401:
  *              $ref: '#/components/responses/MissingJWT'
  *          403:

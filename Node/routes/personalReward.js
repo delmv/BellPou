@@ -12,15 +12,30 @@ const router = new Router();
  *  get:
  *      tags:
  *         - PersonalReward
+ *      parameters:
+ *        - in: query
+ *          name: page
+ *          schema: 
+ *            type: integer
+ *          description: The number of items to skip before starting to collect the result set
+ *        - in: query
+ *          name: size
+ *          schema: 
+ *            type: integer
+ *          description: The numbers of items to return
  *      responses:
  *          200:
  *              $ref: '#/components/responses/PersonalRewardsFound'
  *          400:
- *              $ref: '#/components/responses/ErrorJWT'
+ *            description: client error
+ *            content:
+ *              application/json:
+ *                schema:
+ *                  oneOf:
+ *                    - $ref: '#/components/responses/ErrorJWT'
+ *                    - $ref: '#/components/responses/Valentin'
  *          401:
  *              $ref: '#/components/responses/MissingJWT'
- *          403:
- *              $ref: '#/components/responses/mustBeManager'
  *          500:
  *              description: Server error
  *
@@ -65,7 +80,7 @@ router.post('/', IdMiddleware.identification, PersonalRewardController.create);
  *      requestBody:
  *          $ref: '#/components/requestBodies/PersonalRewardToDelete'
  *      responses:
- *          200:
+ *          204:
  *              $ref: '#/components/responses/PersonalRewardDeleted'
  *          400:
  *              $ref: '#/components/responses/ErrorJWT'

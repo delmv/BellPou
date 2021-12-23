@@ -4,33 +4,6 @@ const sequelize = require("../sequelize/sequelize");
 const Client = require("./Client");
 const Reward = require("./Reward");
 
-/**
- * @swagger
- * components:
- *  schemas:
- *      PersonalReward:
- *          type: object
- *          properties:
- *              id:
- *                  type: integer
- *              discount_code:
- *                  type: string
- *              exp_date:
- *                  type: string
- *                  format: date
- *              is_used:
- *                  type: boolean
- *              client_id:
- *                  type: integer
- *              reward_id:
- *                  type: integer
- *          required:
- *              - discount_code
- *              - exp_date
- *              - is_used
- *              - client_id
- *              - reward_id
- */
 
 const PersonalReward = sequelize.define(
   "personal_reward",

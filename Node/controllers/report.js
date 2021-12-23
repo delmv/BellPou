@@ -4,6 +4,42 @@ const Report = require("../models/Report")
 const sequelize = require("../sequelize/sequelize");
 const { Sequelize } = require("sequelize");
 
+
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *      Report:
+ *          type: object
+ *          properties:
+ *              trash_id:
+ *                  type: integer
+ *              client_id:
+ *                  type: integer
+ *          required:
+ *              - client_id
+ *              - trash_id
+ */
+
+/**
+ *@swagger
+ *components:
+ *  responses:
+ *      ReportAdded:
+ *          description: The report has been added
+ *  requestBodies:
+ *      ReportToAdd:
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          qr_code:
+ *                              type: string
+ *          required:
+ *              - qr_code
+ */
+
 module.exports.create = async (req, res) => {
     const { qr_code } = req.body;
   
