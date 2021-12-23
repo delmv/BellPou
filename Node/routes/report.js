@@ -1,5 +1,10 @@
 const ReportController = require('../controllers/report');
+const Validator = require("../middlewares/express-validator/trash");
+const IdMiddleware = require("../middlewares/Identification.js");
 
+
+const Router = require("express-promise-router");
+const router = new Router();
 
 /**
  * @swagger
@@ -24,4 +29,7 @@ const ReportController = require('../controllers/report');
  *              description: Server error
  *
  */
-router.post('/', ReportController.create);
+router.post('/scanQR',Validator.scanSQVerification,
+IdMiddleware.identification,ReportController.create);
+
+module.exports = router;

@@ -7,9 +7,6 @@ const Router = require("express-promise-router");
 const router = new Router();
 
 
-const { validationResult } = require("express-validator");
-const {ValidationErrorItem} = require("sequelize");
-
 
 /**
  * @swagger
@@ -136,12 +133,7 @@ router.post(
   AuthoMiddleware.mustBeManager,
   TrashController.create
 );
-router.post(
-    '/scanQR',
-    Validator.scanSQVerification,
-    IdMiddleware.identification,
-    TrashController.addAdvertisement
-)
+
 
 /**
  * @swagger
