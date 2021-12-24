@@ -55,5 +55,10 @@ module.exports.patchValidation = [
     check('is_banned')
         .optional()
         .isBoolean()
-        .withMessage('Is banned should be a boolean !')
+        .withMessage('Is banned should be a boolean !'),
+
+    check('id')
+        .optional()
+        .isInt({min: 1})
+        .withMessage('The id of the client you would like do update should be a number greater than 0 !')
 ]

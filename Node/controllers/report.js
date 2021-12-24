@@ -4,6 +4,7 @@ const Report = require("../models/Report")
 const sequelize = require("../sequelize/sequelize");
 const { Sequelize } = require("sequelize");
 
+const { validationResult } = require("express-validator");
 
 /**
  * @swagger
@@ -41,6 +42,10 @@ const { Sequelize } = require("sequelize");
  */
 
 module.exports.create = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty())
+    res.status(400).json({errors: errors.array() })
+  else {
     const { qr_code } = req.body;
   
     try {
@@ -79,5 +84,6 @@ module.exports.create = async (req, res) => {
         console.error(e);
         res.sendStatus(500);
       }
-    }
+    } 
+  }
   }
