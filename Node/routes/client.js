@@ -140,6 +140,7 @@ router.post('/', Validator.postValidation, ClientController.create);
  */
 router.delete(
   '/',
+  Validator.destroyValidation,
   IdMiddleware.identification,
   AuthoMiddleware.mustBeManager,
   ClientController.destroy

@@ -149,7 +149,6 @@ module.exports.create = async (req, res) => {
     }
   }
 
-  
 };
 
 /**
@@ -271,20 +270,25 @@ module.exports.update = async (req, res) => {
  *              - id
  */
 module.exports.destroy = async (req, res) => {
-  const { id } = req.body;
-  try {
-    await sequelize.transaction(
-      {
-        deferrable: Sequelize.Deferrable.SET_DEFERRED,
-      },
-      async (t) => {
-        await PersonalReward.destroy({ where: { client_id: id } }, { transaction: t });
-        await Client.destroy({ where: { id } }, { transaction: t });
-        res.sendStatus(204);
-      }
-    );
-  } catch (error) {
-    console.error(error);
-    res.sendStatus(500);
+  const errors = validationResult(req);
+  if (!errors.isEmpty())
+    res.status(400).json({errors: errors.array() })
+  else {
+    const { id } = req.body;
+    try {
+      await sequelize.transaction(
+        {
+          deferrable: Sequelize.Deferrable.SET_DEFERRED,
+        },
+        async (t) => {
+          await PersonalReward.destroy({ where: { client_id: id } }, { transaction: t });
+          await Client.destroy({ where: { id } }, { transaction: t });
+          res.sendStatus(204);
+        }
+      );
+    } catch (error) {
+      console.error(error);
+      res.sendStatus(500);
+    }
   }
 };

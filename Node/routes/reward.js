@@ -152,6 +152,7 @@ router.delete(
 
 router.patch(
   '/',
+  Validator.patchValidation,
   IdMiddleware.identification,
   AuthoMiddleware.mustBeManager,
   RewardController.update

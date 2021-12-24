@@ -64,6 +64,44 @@ module.exports.postValidation = [
         .withMessage("The cost should be a number")
 ]
 
+module.exports.patchValidation = [
+    check('id')
+        .notEmpty()
+        .withMessage("You must enter an id")
+        .isInt()
+        .withMessage("The id should be a number !"),
+
+    check('name_fr')
+        .optional()
+        .isString()
+        .withMessage("The name should be a string !"),
+
+    check('name_en')
+        .optional()
+        .isString()
+        .withMessage("The name should be a string !"),
+
+    check('description_fr')
+        .optional()
+        .isString()
+        .withMessage("The description should be a string !"),
+
+    check('description_en')
+        .optional()
+        .isString()
+        .withMessage("The description should be a string !"),
+
+    check('real_cost')
+        .optional()
+        .isDecimal()
+        .withMessage("The real cost should be a decimal number !"),
+
+    check('throins_cost')
+        .optional()
+        .isInt()
+        .withMessage("The cost should be a number")
+]
+
 module.exports.deleteValidation = [
     check('id')
         .not()

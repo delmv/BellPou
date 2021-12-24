@@ -184,7 +184,7 @@ module.exports.update = async (req, res) => {
     try {
       const vendor = await Vendor.findByPk(toUpdate.id);
       if (vendor == null) {
-        req.sendStatus(404);
+        res.sendStatus(404);
       } else {
         newData.name_fr = toUpdate.name_fr
           ? toUpdate.name_fr

@@ -240,7 +240,7 @@ module.exports.update = async (req, res) => {
     try {
       const reward = await Reward.findByPk(toUpdate.id);
       if (reward == null) {
-        req.sendStatus(404);
+        res.sendStatus(404);
       } else {
         newData.name_fr = toUpdate.name_fr
           ? toUpdate.name_fr

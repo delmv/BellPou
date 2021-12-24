@@ -62,3 +62,11 @@ module.exports.patchValidation = [
         .isInt({min: 1})
         .withMessage('The id of the client you would like do update should be a number greater than 0 !')
 ]
+
+module.exports.destroyValidation = [
+    check('id')
+        .notEmpty()
+        .withMessage("The client ID you want to destroy must be entered !")
+        .isInt({min: 1})
+        .withMessage("The cliend ID must be an integer greater than 0 !")
+]
