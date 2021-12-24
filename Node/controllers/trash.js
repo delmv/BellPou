@@ -210,9 +210,9 @@ module.exports.update = async (req, res) => {
             ? toUpdate.last_empty
             : trash.last_empty;
 
-        newData.qr_value = toUpdate.qr_value
-            ? toUpdate.qr_value
-            : trash.qr_value;
+        newData.qr_code = toUpdate.qr_code
+            ? toUpdate.qr_code
+            : trash.qr_code;
 
         newData.position_id = toUpdate.position_id
             ? toUpdate.position_id
@@ -222,7 +222,7 @@ module.exports.update = async (req, res) => {
           is_full: newData.is_full,
           nb_alerts: newData.nb_alerts,
           last_empty: newData.last_empty,
-          qr_value: newData.qr_value,
+          qr_code: newData.qr_code,
           position_id: newData.position_id,
         });
         res.sendStatus(204);
@@ -297,8 +297,9 @@ module.exports.empty = async (req, res) => {
     const { were_real_reports: wereRealReports, trash_id: trash_id } = req.body
 
     try {
+      const trashDB = await Trash.findByPk(trash_id);
       const reports = await Report.findAll({where: {trash: trash_id}})
-      if (reports !== null) {
+      if (reports !== null && trashDB != null) {
         await sequelize.transaction(
             {
               deferrable: Sequelize.Deferrable.SET_DEFERRED
@@ -323,7 +324,7 @@ module.exports.empty = async (req, res) => {
               if (wereRealReports) await trashDB.update({last_empty: emptyDate}, {transaction: t})
               await trashDB.update({nb_alerts: 0, is_full: false}, {transaction: t});
 
-              res.sendStatus(201);
+              res.sendStatus(202);
             }
         );
       } else

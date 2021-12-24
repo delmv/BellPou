@@ -174,7 +174,7 @@ module.exports.create = async (req, res) => {
               description_en: reward_description_en,
               throins_cost,
               real_cost,
-              vendor_id: vendorsDB.id,
+              vendor_id: vendorDB.id,
             },
             { transaction: t }
           );
