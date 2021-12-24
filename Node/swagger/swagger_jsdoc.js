@@ -1,6 +1,8 @@
 const fs = require('fs');
 const swaggerJSDoc = require('swagger-jsdoc');
 
+
+
 const options = {
     definition: {
         openapi: '3.0.0',
@@ -12,7 +14,9 @@ const options = {
     // Path to the API docs
     apis: [
         './controllers/*',
-        './middlewares/*',
+        './middlewares/Authorization.js',
+        './middlewares/Identification.js',
+        './middlewares/express-validator/*',
         './models/*',
         './routes/*',
     ],

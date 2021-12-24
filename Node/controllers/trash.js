@@ -40,8 +40,6 @@ const {getPagination,getPagingData} = require("../utils/utils");
  *              - qr_code
  *              - position_id
  */
-
-
 module.exports.findAll = async (req, res) => {
   try {
     const trashs = await Trash.findAll({
@@ -105,6 +103,38 @@ module.exports.findOne = async (req, res) => {
   }
 };
 
+/**
+ *@swagger
+ *components:
+ *  responses:
+ *      TrashAdded:
+ *          description: The trash has been added
+ *  requestBodies:
+ *      TrashToAdd:
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          is_full:
+ *                            type: boolean
+ *                          nb_alerts:
+ *                            type: integer
+ *                          last_empty:
+ *                            type: string
+ *                            format: date
+ *                          qr_code:
+ *                             type: string
+ *                          position_id:
+ *                            type: integer
+ *                            $ref: "#/components/schemas/Position"
+ *                      required:
+ *                        - is_full
+ *                        - nb_alerts
+ *                        - last_empty
+ *                        - qr_code
+ *                        - position_id
+ */
 module.exports.create = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty())
@@ -140,6 +170,19 @@ module.exports.create = async (req, res) => {
   }
 };
 
+/**
+ *@swagger
+ *components:
+ *  responses:
+ *      TrashUpdated:
+ *          description: The trash has been updtated
+ *  requestBodies:
+ *      TrashToUpdate:
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#/components/schemas/Trash'
+ */
 module.exports.update = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty())
@@ -206,8 +249,8 @@ module.exports.update = async (req, res) => {
  *                      properties:
  *                          id:
  *                              type: integer
- *          required:
- *              - id
+ *                      required:
+ *                        - id
  */
 module.exports.destroy = async (req, res) => {
   const errors = validationResult(req);
@@ -225,7 +268,27 @@ module.exports.destroy = async (req, res) => {
   }
 };
 
-
+/**
+ *@swagger
+ *components:
+ *  responses:
+ *      TrashEmptied:
+ *          description: The trash has been emptied
+ *  requestBodies:
+ *      TrashToEmpty:
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          were_real_reports:
+ *                            type: boolean
+ *                          trash_id:
+ *                            type: integer
+ *                      required:
+ *                        - were_real_reports
+ *                        - trash_id
+ */
 module.exports.empty = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty())

@@ -8,7 +8,7 @@ const router = new Router();
 
 /**
  * @swagger
- * /report:
+ * /report/scanQR:
  *  post:
  *      tags:
  *          - Report
@@ -18,13 +18,7 @@ const router = new Router();
  *          201:
  *              $ref: '#/components/responses/ReportAdded'
  *          400:
- *            description: client error
- *            content:
- *              application/json:
- *                schema:
- *                  oneOf:
- *                    - $ref: '#/components/responses/Valentin'
- *                    - $ref: '#/components/responses/Valentin'
+ *              $ref: '#/components/responses/InputError'
  *          500:
  *              description: Server error
  *

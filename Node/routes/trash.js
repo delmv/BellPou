@@ -13,7 +13,7 @@ const router = new Router();
  * /trash:
  *  get:
  *      tags:
- *         - trash
+ *         - Trash
  *      responses:
  *          200:
  *              $ref: '#/components/responses/TrashFound'
@@ -29,7 +29,7 @@ router.get('/:id', TrashController.findOne);
  * /trash:
  *  get:
  *      tags:
- *         - trash
+ *         - Trash
  *      parameters:
  *        - in: query
  *          name: page
@@ -45,56 +45,44 @@ router.get('/:id', TrashController.findOne);
  *          200:
  *              $ref: '#/components/responses/TrashsFound'
  *          400:
- *            description: client error
- *            content:
- *              application/json:
- *                schema:
- *                  oneOf:
- *                    - $ref: '#/components/responses/Valentin'
- *                    - $ref: '#/components/responses/Valentin'
+ *              $ref: '#/components/responses/InputError'
  *          500:
  *              description: Server error
  *
  */
-
-router.get('/', TrashController.findAll);
+router.get('/', TrashController.findAllPaging);
 
 /**
  * @swagger
- * /trash/paging:
- *  get:
+ * /trash:
+ *  patch:
  *      tags:
- *         - trash
- *      parameters:
- *        - in: query
- *          name: page
- *          schema: 
- *            type: integer
- *          description: The number of items to skip before starting to collect the result set
- *        - in: query
- *          name: size
- *          schema: 
- *            type: integer
- *          description: The numbers of items to return
+ *          - Trash
+ *      security:
+ *          - bearerAuth: []
+ *      requestBody:
+ *          $ref: '#/components/requestBodies/TrashToUpdate'
  *      responses:
- *          200:
- *              $ref: '#/components/responses/TrashsFound'
+ *          204:
+ *              $ref: '#/components/responses/TrashUpdated'
  *          400:
  *            description: client error
  *            content:
  *              application/json:
  *                schema:
  *                  oneOf:
- *                    - $ref: '#/components/responses/Valentin'
- *                    - $ref: '#/components/responses/Valentin'
+ *                    - $ref: '#/components/responses/ErrorJWT'
+ *                    - $ref: '#/components/responses/InputError'
+ *          401:
+ *              $ref: '#/components/responses/MissingJWT'
+ *          403:
+ *              $ref: '#/components/responses/mustBeManager'
+ *          404:
+ *              description: Trash doesn't exist
  *          500:
  *              description: Server error
  *
  */
-
-
-router.get('/paging', TrashController.findAllPaging);
-
 router.patch(
   '/',
   Validator.patchVerification,
@@ -106,16 +94,14 @@ router.patch(
 /**
  * @swagger
  * /trash:
- *  delete:
+ *  post:
  *      tags:
- *          - trash
- *      security:
- *          - bearerAuth: []
+ *          - Trash
  *      requestBody:
- *          $ref: '#/components/requestBodies/TrashToDelete'
+ *          $ref: '#/components/requestBodies/TrashToAdd'
  *      responses:
- *          200:
- *              $ref: '#/components/responses/TrashDeleted'
+ *          201:
+ *              $ref: '#/components/responses/TrashAdded'
  *          400:
  *              $ref: '#/components/responses/ErrorJWT'
  *          401:
@@ -124,7 +110,6 @@ router.patch(
  *              $ref: '#/components/responses/mustBeManager'
  *          500:
  *              description: Server error
- *
  */
 router.post(
   '/',
@@ -166,6 +151,28 @@ router.delete(
   TrashController.destroy
 );
 
+/**
+ * @swagger
+ * /trash/empty:
+ *  post:
+ *      tags:
+ *          - Trash
+ *      requestBody:
+ *          $ref: '#/components/requestBodies/TrashToEmpty'
+ *      responses:
+ *          201:
+ *              $ref: '#/components/responses/TrashEmptied'
+ *          400:
+ *              $ref: '#/components/responses/ErrorJWT'
+ *          401:
+ *              $ref: '#/components/responses/MissingJWT'
+ *          403:
+ *              $ref: '#/components/responses/mustBeManager'
+ *          404:
+ *              description: Trash not found
+ *          500:
+ *              description: Server error
+ */
 router.post(
   '/empty',
   Validator.emptyVerification,

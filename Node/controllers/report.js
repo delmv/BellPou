@@ -37,8 +37,8 @@ const { validationResult } = require("express-validator");
  *                      properties:
  *                          qr_code:
  *                              type: string
- *          required:
- *              - qr_code
+ *                      required:
+ *                        - qr_code
  */
 
 module.exports.create = async (req, res) => {

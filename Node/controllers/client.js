@@ -47,14 +47,19 @@ const { validationResult } = require("express-validator");
  * @swagger
  * components:
  *  responses:
- *      ClientsFound:
- *           description: return un array of Clients
+ *      ClientFound:
+ *           description: return un array of Clients    
  *           content:
- *               application/json:
- *                   schema:
- *                      type: array
- *                      items:
- *                        $ref: '#/components/schemas/Client'
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  totalItems:
+ *                    type: integer
+ *                  itm:
+ *                    type: array
+ *                    items:
+ *                      - $ref: '#/components/schemas/Client
  */
 
 module.exports.findAll = async (req, res) => {
@@ -78,8 +83,8 @@ module.exports.findAll = async (req, res) => {
  *@swagger
  *components:
  *  responses:
- *      ClientAdded:
- *          description: The client has been added
+ *    ClientAdded:
+ *        description: The client has been added
  *  requestBodies:
  *      ClientToAdd:
  *          content:
@@ -100,13 +105,13 @@ module.exports.findAll = async (req, res) => {
  *                          password:
  *                              type: string
  *                              format: password
- *          required:
- *              - first_name
- *              - last_name
- *              - birth_date
- *              - email
- *              - nb_bad_report
- *              - is_banned
+ *                      required:
+ *                        - first_name
+ *                        - last_name
+ *                        - birth_date
+ *                        - email
+ *                        - nb_bad_report
+ *                        - is_banned
  */
 
 
@@ -164,7 +169,6 @@ module.exports.create = async (req, res) => {
  *                  schema:
  *                      $ref: '#/components/schemas/Client'
  */
-
 module.exports.update = async (req, res) => {
 
   const errors = validationResult(req);
@@ -266,8 +270,8 @@ module.exports.update = async (req, res) => {
  *                      properties:
  *                          id:
  *                              type: integer
- *          required:
- *              - id
+ *                      required:
+ *                        - id
  */
 module.exports.destroy = async (req, res) => {
   const errors = validationResult(req);

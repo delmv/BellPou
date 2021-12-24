@@ -11,6 +11,9 @@ const {getPagination,getPagingData} = require("../utils/utils");
 /**
  * @swagger
  * components:
+ *  responses:
+ *      VendorsFound:
+ *          description: All the vendors has been received
  *  schemas:
  *      Vendor:
  *          type: object
@@ -38,6 +41,8 @@ const {getPagination,getPagingData} = require("../utils/utils");
  *              - name_en
  *              - description_fr
  *              - description_en
+ *              - throins_cost
+ *              - real_cost
  *              - position_id
  */
 
@@ -92,7 +97,44 @@ module.exports.findOne = async (req, res) => {
   }
 };
 
-
+/**
+ *@swagger
+ *components:
+ *  responses:
+ *      VendorAdded:
+ *          description: The vendor has been added
+ *  requestBodies:
+ *      VendorToAdd:
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                        name_fr:
+ *                          type: string
+ *                        name_en:
+ *                          type: string
+ *                        description_fr:
+ *                          type: string
+ *                        description_en:
+ *                          type: string
+ *                        throins_cost:
+ *                          type: integer
+ *                        real_cost:
+ *                          type: number
+ *                          format: float
+ *                        position_id:
+ *                          type: integer
+ *                          $ref: "#/components/schemas/Position"
+ *                      required:
+ *                        - name_fr
+ *                        - name_en
+ *                        - description_fr
+ *                        - description_en
+ *                        - throins_cost
+ *                        - real_cost
+ *                        - position_id
+ */
 module.exports.create = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty())
@@ -144,8 +186,8 @@ module.exports.create = async (req, res) => {
  *                      properties:
  *                          id:
  *                              type: integer
- *          required:
- *              - id
+ *                      required:
+ *                        - id
  */
 module.exports.destroy = async (req, res) => {
   const errors = validationResult(req);
@@ -171,6 +213,19 @@ module.exports.destroy = async (req, res) => {
   }
 };
 
+/**
+ *@swagger
+ *components:
+ *  responses:
+ *      VendorUpdated:
+ *          description: The vendor has been updtated
+ *  requestBodies:
+ *      VendorToUpdate:
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#/components/schemas/Vendor'
+ */
 module.exports.update = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty())

@@ -85,8 +85,8 @@ const {getPagination,getPagingData} = require("../utils/utils");
  *                      properties:
  *                          reward_id:
  *                              type: integer
- *          required:
- *              - reward_id
+*                       required:
+ *                        - reward_id
  */
 
 
@@ -164,8 +164,8 @@ module.exports.create = async (req, res) => {
  *                      properties:
  *                          id:
  *                              type: integer
- *          required:
- *              - id
+ *                      required:
+ *                        - id
  */
 module.exports.destroy = async (req, res) => {
   const errors = validationResult(req);

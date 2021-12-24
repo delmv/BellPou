@@ -33,22 +33,7 @@ router.get('/:id', RewardController.findOne);
 
 /**
  * @swagger
- * /reward:
- *  get:
- *      tags:
- *         - Reward
- *      responses:
- *          200:
- *              $ref: '#/components/responses/RewardFound'
- *          500:
- *              description: Server error
- *
- */
-router.get('/', RewardController.findAll);
-
-/**
- * @swagger
- * /reward/paging:
+ * /reward/:
  *  get:
  *      tags:
  *         - Reward
@@ -67,19 +52,13 @@ router.get('/', RewardController.findAll);
  *          200:
  *              $ref: '#/components/responses/RewardsFound'
  *          400:
- *            description: client error
- *            content:
- *              application/json:
- *                schema:
- *                  oneOf:
- *                    - $ref: '#/components/responses/Valentin'
- *                    - $ref: '#/components/responses/Valentin'
+ *              $ref: '#/components/responses/InputError'
  *          500:
  *              description: Server error
  *
  */
 
-router.get('/paging', RewardController.findAllPaging);
+router.get('/', RewardController.findAllPaging);
 
 /**
  * @swagger
@@ -101,7 +80,7 @@ router.get('/paging', RewardController.findAllPaging);
  *                schema:
  *                  oneOf:
  *                    - $ref: '#/components/responses/ErrorJWT'
- *                    - $ref: '#/components/responses/Valentin'
+ *                    - $ref: '#/components/responses/InputError'
  *          401:
  *              $ref: '#/components/responses/MissingJWT' 
  *          403:
@@ -150,6 +129,36 @@ router.delete(
   RewardController.destroy
 );
 
+/**
+ * @swagger
+ * /reward:
+ *  patch:
+ *      tags:
+ *          - Reward
+ *      security:
+ *          - bearerAuth: []
+ *      requestBody:
+ *          $ref: '#/components/requestBodies/RewardToUpdate'
+ *      responses:
+ *          204:
+ *              $ref: '#/components/responses/RewardUpdated'
+ *          400:
+ *            description: client error
+ *            content:
+ *              application/json:
+ *                schema:
+ *                  oneOf:
+ *                    - $ref: '#/components/responses/ErrorJWT'
+ *                    - $ref: '#/components/responses/InputError'
+ *          401:
+ *              $ref: '#/components/responses/MissingJWT'
+ *          403:
+ *              $ref: '#/components/responses/mustBeManager'
+ *          404:
+ *              description: Reward doesn't exist
+ *          500:
+ *              description: Server error
+ */
 router.patch(
   '/',
   Validator.patchValidation,

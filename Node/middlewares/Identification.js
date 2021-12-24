@@ -16,8 +16,8 @@ const jwt = require('jsonwebtoken');
  *          description: The JWT is not valid
  *      MissingJWT:
  *          description: No JWT
- *      Valentin:
- *          description: Val-idation
+ *      InputError:
+ *          description: Input error
  */
 
 module.exports.identification = async (req, res, next) => {

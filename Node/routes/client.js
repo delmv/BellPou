@@ -28,7 +28,7 @@ const router = new Router();
  *          description: The numbers of items to return
  *      responses:
  *          200:
- *              $ref: '#/components/responses/ClientsFound'
+ *              $ref: '#/components/responses/ClientFound'
  *          400:
  *            description: client error
  *            content:
@@ -36,7 +36,7 @@ const router = new Router();
  *                schema:
  *                  oneOf:
  *                    - $ref: '#/components/responses/ErrorJWT'
- *                    - $ref: '#/components/responses/Valentin'
+ *                    - $ref: '#/components/responses/InputError'
  *          401:
  *              $ref: '#/components/responses/MissingJWT'
  *          403:
@@ -64,13 +64,7 @@ router.get(
  *          201:
  *              $ref: '#/components/responses/ClientAdded'
  *          400:
- *            description: client error
- *            content:
- *              application/json:
- *                schema:
- *                  oneOf:
- *                    - $ref: '#/components/responses/Valentin'
- *                    - $ref: '#/components/responses/Valentin'
+ *              $ref: '#/components/responses/InputError'
  *          500:
  *              description: Server error
  *
@@ -98,7 +92,7 @@ router.post('/', Validator.postValidation, ClientController.create);
  *                schema:
  *                  oneOf:
  *                    - $ref: '#/components/responses/ErrorJWT'
- *                    - $ref: '#/components/responses/Valentin'
+ *                    - $ref: '#/components/responses/InputError'
  *          401:
  *              $ref: '#/components/responses/MissingJWT'
  *          500:
@@ -129,7 +123,7 @@ router.post('/', Validator.postValidation, ClientController.create);
  *                schema:
  *                  oneOf:
  *                    - $ref: '#/components/responses/ErrorJWT'
- *                    - $ref: '#/components/responses/Valentin'
+ *                    - $ref: '#/components/responses/InputError'
  *          401:
  *              $ref: '#/components/responses/MissingJWT'
  *          403:

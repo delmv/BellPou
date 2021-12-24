@@ -208,8 +208,8 @@ module.exports.create = async (req, res) => {
  *                      properties:
  *                          id:
  *                              type: integer
- *          required:
- *              - id
+ *                      required:
+ *                        - id
  */
 module.exports.destroy = async (req, res) => {
   const errors = validationResult(req);
@@ -227,6 +227,19 @@ module.exports.destroy = async (req, res) => {
   }
 };
 
+/**
+ *@swagger
+ *components:
+ *  responses:
+ *      RewardUpdated:
+ *          description: The reward has been updtated
+ *  requestBodies:
+ *      RewardToUpdate:
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#/components/schemas/Reward'
+ */
 module.exports.update = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty())

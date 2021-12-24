@@ -42,13 +42,7 @@ router.get('/id:', VendorController.findOne);
  *          200:
  *              $ref: '#/components/responses/VendorsFound'
  *          400:
- *            description: client error
- *            content:
- *              application/json:
- *                schema:
- *                  oneOf:
- *                    - $ref: '#/components/responses/Valentin'
- *                    - $ref: '#/components/responses/Valentin'
+ *              $ref: '#/components/responses/InputError'
  *          500:
  *              description: Server error
  *
@@ -61,31 +55,21 @@ router.get('/', VendorController.findAll);
  * /vendor:
  *  post:
  *      tags:
- *          - vendor
- *      security:
- *          - bearerAuth: []
+ *          - Vendor
  *      requestBody:
- *          $ref: '#/components/requestBodies/VendorToDelete'
+ *          $ref: '#/components/requestBodies/VendorToAdd'
  *      responses:
- *          200:
- *              $ref: '#/components/responses/VendorDeleted'
+ *          201:
+ *              $ref: '#/components/responses/VendorAdded'
  *          400:
- *            description: client error
- *            content:
- *              application/json:
- *                schema:
- *                  oneOf:
- *                    - $ref: '#/components/responses/ErrorJWT'
- *                    - $ref: '#/components/responses/Valentin'
+ *              $ref: '#/components/responses/ErrorJWT'
  *          401:
  *              $ref: '#/components/responses/MissingJWT'
  *          403:
  *              $ref: '#/components/responses/mustBeManager'
  *          500:
  *              description: Server error
- *
  */
-
 router.post(
   '/',
   Validator.postVerification,
@@ -125,6 +109,37 @@ router.delete(
   VendorController.destroy
 );
 
+/**
+ * @swagger
+ * /vendor:
+ *  patch:
+ *      tags:
+ *          - Vendor
+ *      security:
+ *          - bearerAuth: []
+ *      requestBody:
+ *          $ref: '#/components/requestBodies/VendorToUpdate'
+ *      responses:
+ *          204:
+ *              $ref: '#/components/responses/VendorUpdated'
+ *          400:
+ *            description: client error
+ *            content:
+ *              application/json:
+ *                schema:
+ *                  oneOf:
+ *                    - $ref: '#/components/responses/ErrorJWT'
+ *                    - $ref: '#/components/responses/InputError'
+ *          401:
+ *              $ref: '#/components/responses/MissingJWT'
+ *          403:
+ *              $ref: '#/components/responses/mustBeManager'
+ *          404:
+ *              description: Vendor doesn't exist
+ *          500:
+ *              description: Server error
+ *
+ */
 router.patch(
   '/',
   Validator.patchVerification,

@@ -20,6 +20,28 @@ module.exports.getUser = async (email, password) => {
   }
 };
 
+/**
+ *@swagger
+ *components:
+ *  responses:
+ *      Logged:
+ *          description: The used is logged !
+ *  requestBodies:
+ *      Login:
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          email:
+ *                            type: string
+ *                            format: email
+ *                          password:
+ *                            type: string
+ *                      required:
+ *                        - email
+ *                        - password
+ */
 module.exports.login = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty())
@@ -49,6 +71,17 @@ module.exports.login = async (req, res) => {
   }
 };
 
+/**
+ * @swagger
+ * components:
+ *  responses:
+ *      UserFound:
+ *           description: Return the user in session
+ *           content:
+ *               application/json:
+ *                   schema:
+ *                       $ref: '#/components/schemas/Client'
+ */
 module.exports.getUserSession = async (req, res) => {
   if (req.session !== undefined) {
     let user = null

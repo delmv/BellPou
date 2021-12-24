@@ -35,7 +35,7 @@ const router = new Router();
  *                schema:
  *                  oneOf:
  *                    - $ref: '#/components/responses/ErrorJWT'
- *                    - $ref: '#/components/responses/Valentin'
+ *                    - $ref: '#/components/responses/InputError'
  *          401:
  *              $ref: '#/components/responses/MissingJWT'
  *          500:

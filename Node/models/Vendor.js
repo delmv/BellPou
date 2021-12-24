@@ -3,9 +3,6 @@ const sequelize = require("../sequelize/sequelize");
 const Position = require("./Position");
 
 
-
-
-
 const Vendor = sequelize.define(
   "vendor",
   {
