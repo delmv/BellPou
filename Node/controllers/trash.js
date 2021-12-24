@@ -153,7 +153,7 @@ module.exports.update = async (req, res) => {
     try {
       const trash = await Trash.findByPk(toUpdate.id);
       if (trash == null) {
-        req.sendStatus(404);
+        res.sendStatus(404);
       } else {
         newData.is_full = toUpdate.is_full
             ? toUpdate.is_full
