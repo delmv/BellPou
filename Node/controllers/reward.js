@@ -8,6 +8,7 @@ const sequelize = require("../sequelize/sequelize");
 const { Sequelize } = require("sequelize");
 
 const { validationResult } = require("express-validator");
+const {getPagination,getPagingData} = require("../utils/utils");
 
 /**
  * @swagger
@@ -118,7 +119,7 @@ module.exports.findAllPaging = async (req, res) => {
       limit,
       offset
     });
-    const reponse = getPagingData(rewards,page,limit);
+    const reponse = getPagingData(rewards, page, limit);
     res.json(reponse);
   } catch (error) {
     res.sendStatus(500);
@@ -129,7 +130,7 @@ module.exports.findAllPaging = async (req, res) => {
 module.exports.create = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty())
-    res.status(400).json({errors: errors.array() })
+    res.status(400).json({ errors: errors.array() })
   else {
     const {
       reward_name_fr,
@@ -159,12 +160,12 @@ module.exports.create = async (req, res) => {
                 name_en: vendor_name_en,
                 description_fr: vendor_description_fr,
                 description_en: vendor_description_en,
-                position_id: positionsDB[0].id,
+                throins_cost: positionsDB[0].id,
               }, { transaction: t }
             );
-  
+
           }
-  
+
           await Reward.create(
             {
               name_fr: reward_name_fr,
@@ -182,13 +183,13 @@ module.exports.create = async (req, res) => {
       res.sendStatus(201);
     } catch (e) {
       if (e.message === "Localisation not valid") {
-        res.status(404).json({ error: e.message});
+        res.status(404).json({ error: e.message });
       } else {
         console.log(e);
         res.sendStatus(500);
       }
-    } 
-  
+    }
+
   }
 };
 
@@ -213,7 +214,7 @@ module.exports.create = async (req, res) => {
 module.exports.destroy = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty())
-    res.status(400).json({errors: errors.array() })
+    res.status(400).json({ errors: errors.array() })
   else {
     const { id } = req.body;
     try {
@@ -221,6 +222,64 @@ module.exports.destroy = async (req, res) => {
       res.sendStatus(204);
     } catch (error) {
       console.error(error);
+      res.sendStatus(500);
+    }
+  }
+};
+
+module.exports.update = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty())
+    res.status(400).json({ errors: errors.array() })
+  else {
+    if (req.session === undefined) {
+      return res.sendStatus(401);
+    }
+    const newData = {};
+    const toUpdate = req.body;
+    try {
+      const reward = await Reward.findByPk(toUpdate.id);
+      if (reward == null) {
+        req.sendStatus(404);
+      } else {
+        newData.name_fr = toUpdate.name_fr
+          ? toUpdate.name_fr
+          : reward.name_fr;
+
+        newData.name_en = toUpdate.name_en
+          ? toUpdate.name_en
+          : reward.name_en;
+
+        newData.description_fr = toUpdate.description_fr
+          ? toUpdate.description_fr
+          : reward.description_fr;
+
+        newData.description_en = toUpdate.description_en
+          ? toUpdate.description_en
+          : reward.description_en;
+
+        newData.throins_cost = toUpdate.throins_cost
+          ? toUpdate.throins_cost
+          : reward.throins_cost;
+
+
+        newData.real_cost = toUpdate.real_cost
+          ? toUpdate.real_cost
+          : reward.real_cost;
+
+        await reward.update({
+          name_fr: newData.name_fr,
+          name_en: newData.name_en,
+          description_fr: newData.description_fr,
+          description_en: newData.description_en,
+          throins_cost: newData.throins_cost,
+          real_cost: newData.real_cost,
+
+        });
+        res.sendStatus(204);
+      }
+    } catch (e) {
+      console.error(e);
       res.sendStatus(500);
     }
   }

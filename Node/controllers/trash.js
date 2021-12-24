@@ -9,6 +9,7 @@ const sequelize = require("../sequelize/sequelize");
 const { Sequelize } = require("sequelize");
 const { randomString } = require("../utils/utils");
 const {validationResult} = require("express-validator");
+const {getPagination,getPagingData} = require("../utils/utils");
 
 
 /**

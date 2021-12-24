@@ -138,7 +138,7 @@ module.exports.create = async (req, res) => {
         value
       };
       const token = jwt.sign(payload, process.env.SECRET_TOKEN, {
-        expiresIn: "1d",
+        expiresIn: "600",
       });
 
       client.token = token;
@@ -205,13 +205,7 @@ module.exports.update = async (req, res) => {
   
         newData.email = toUpdate.email ? toUpdate.email : client.email;
   
-        if (toUpdate.password != undefined) {
-          const hashedPassword = await getHash(toUpdate.password);
-          newData.password = hashedPassword;
-        } else {
-          newData.password = client.password
-        }
-  
+
         if (isManager) {
           newData.nb_throins = toUpdate.nb_throins
             ? toUpdate.nb_throins
@@ -228,6 +222,15 @@ module.exports.update = async (req, res) => {
           newData.nb_throins = client.nb_throins;
           newData.nb_bad_reports = client.nb_bad_reports;
           newData.is_banned = client.is_banned;
+
+
+          if (toUpdate.password != undefined) {
+            const hashedPassword = await getHash(toUpdate.password);
+            newData.password = hashedPassword;
+          } else {
+            newData.password = client.password
+          }
+    
         }
   
         await client.update({

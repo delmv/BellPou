@@ -5,6 +5,7 @@ const { randomString } = require("../utils/utils");
 const sequelize = require("../sequelize/sequelize");
 const { Sequelize } = require("sequelize");
 const { validationResult } = require("express-validator");
+const {getPagination,getPagingData} = require("../utils/utils");
 
 /**
  * @swagger

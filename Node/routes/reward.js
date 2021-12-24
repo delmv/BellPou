@@ -150,4 +150,10 @@ router.delete(
   RewardController.destroy
 );
 
+router.patch(
+  '/',
+  IdMiddleware.identification,
+  AuthoMiddleware.mustBeManager,
+  RewardController.update
+);
 module.exports = router;

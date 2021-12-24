@@ -125,4 +125,10 @@ router.delete(
   VendorController.destroy
 );
 
+router.patch(
+  '/',
+  IdMiddleware.identification,
+  AuthoMiddleware.mustBeManager,
+  VendorController.update
+);
 module.exports = router;

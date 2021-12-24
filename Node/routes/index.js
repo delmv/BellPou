@@ -9,13 +9,9 @@ const ReportRouter = require("./report");
 
 const router = require("express").Router();
 
-console.log("test")
 router.use("/client", ClientRouter);
-console.log("test")
 router.use("/personalReward", PersonalRewardRouter);
-console.log("test")
 router.use("/reward", RewardRouter);
-console.log("test")
 router.use("/trash", TrashRouter);
 router.use("/vendor", VendorRouter);
 router.use("/user", UserRouter);
