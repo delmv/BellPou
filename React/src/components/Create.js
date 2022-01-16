@@ -13,7 +13,6 @@ const Create = ({ initState, formFields, createData }) => {
 	const saveItem = async (e) => {
 		e.preventDefault();
 		e.stopPropagation();
-		
 		await createData(item);
 	};
 
@@ -28,6 +27,7 @@ const Create = ({ initState, formFields, createData }) => {
 			>
 				{formFields.map(f => (
 					<TextField
+						error={!(f.validation(item[f.field]))}
 						size='small'
 						margin='normal'
 						required
