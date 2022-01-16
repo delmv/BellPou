@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Navigate } from 'react-router-dom';
-import { Avatar, Button, CssBaseline, TextField, Link, Box, Typography, Container, Snackbar } from '@mui/material';
-import MuiAlert from '@mui/material/Alert';
+import { Avatar, Button, CssBaseline, TextField, Link, Box, Typography, Container } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {useSnackbar} from 'notistack';
@@ -19,14 +18,14 @@ function Copyright(props) {
 	);
 }
 
-const Alert = React.forwardRef(function Alert(props, ref) {
-	return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
-});
+function isEmailValid(email) {
+	const regex = new RegExp('.+@.+\\..+');
+	return regex.test(email);
+}
 
 const theme = createTheme();
 
 export default function SignIn(props) {
-	const [error, setError] = React.useState(false);
 	const [user, setUser] = React.useState(null);
 	const { enqueueSnackbar } = useSnackbar();
 
@@ -35,25 +34,21 @@ export default function SignIn(props) {
 		const data = new FormData(event.currentTarget);
 		const email = data.get('email');
 		const password = data.get('password');
-		if (email && password) {
+
+		if (email && password && isEmailValid(email)) {
 			try {
 				setUser(await props.login(email, password));
+				enqueueSnackbar('Login successful', {variant: 'success'});
 			} catch (e) {
-				console.log(e.message);
-				setError(e.message);
+				enqueueSnackbar(e.message, {variant: 'error'});
 			}
 		} else {
-			enqueueSnackbar('L\'email et le mot de passe sont obligatoires', {variant: 'error'});
+			if (!isEmailValid(email))
+				enqueueSnackbar('L\'email n\'est pas valide', {variant: 'error'});
+			else
+				enqueueSnackbar('L\'email et le mot de passe sont obligatoires', {variant: 'error'});
 		}
 	};
-
-	const handleClose = (event, reason) => {
-		if (reason === 'clickaway') {
-			return;
-		}
-		setError(false);
-	};
-
 
 	return (
 		<ThemeProvider theme={theme}>
@@ -109,11 +104,6 @@ export default function SignIn(props) {
 				</Box>
 				<Copyright sx={{ mt: 8, mb: 4 }} />
 			</Container>
-			<Snackbar open={error} autoHideDuration={6000} onClose={handleClose}>
-				<Alert onClose={handleClose} severity='error' sx={{ width: '100%' }}>
-					{error}
-				</Alert>
-			</Snackbar>
 		</ThemeProvider>
 	);
 }
