@@ -4,6 +4,7 @@ import { Avatar, Button, CssBaseline, TextField, Link, Box, Typography, Containe
 import MuiAlert from '@mui/material/Alert';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import {useSnackbar} from 'notistack';
 
 function Copyright(props) {
 	return (
@@ -13,7 +14,7 @@ function Copyright(props) {
                 BellPou
 			</Link>{' '}
 			{new Date().getFullYear()}
-			{'.'}
+			.
 		</Typography>
 	);
 }
@@ -27,7 +28,7 @@ const theme = createTheme();
 export default function SignIn(props) {
 	const [error, setError] = React.useState(false);
 	const [user, setUser] = React.useState(null);
-
+	const { enqueueSnackbar } = useSnackbar();
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
@@ -38,10 +39,11 @@ export default function SignIn(props) {
 			try {
 				setUser(await props.login(email, password));
 			} catch (e) {
+				console.log(e.message);
 				setError(e.message);
 			}
 		} else {
-			setError('L\'email et le mot de passe sont obligatoires');
+			enqueueSnackbar('L\'email et le mot de passe sont obligatoires', {variant: 'error'});
 		}
 	};
 
@@ -49,7 +51,6 @@ export default function SignIn(props) {
 		if (reason === 'clickaway') {
 			return;
 		}
-
 		setError(false);
 	};
 

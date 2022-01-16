@@ -69,8 +69,6 @@ const columns = [
 		flex: 1
 		
 	}
-
-
 ];
 
 const initState = {
@@ -83,8 +81,8 @@ const initState = {
 	real_cost:'',
 	vendor_id:''
 };
-const formFields = columns.filter(x => x.required);
 
+const formFields = columns.filter(x => x.required);
 
 export default function Users() {
 	const [paginationState, setPaginationState] = React.useState({

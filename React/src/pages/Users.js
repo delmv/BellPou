@@ -73,6 +73,7 @@ const initState = {
 };
 
 const formFields = columns.filter(x => x.required);
+
 formFields.push({
 	field: 'password',
 	headerName: 'Password',
