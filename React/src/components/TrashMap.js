@@ -1,6 +1,20 @@
 import React from 'react';
 import '../index.css';
 import { MapContainer, TileLayer, Marker,Popup } from 'react-leaflet';
+import L from 'leaflet';
+import greenIconSVG from '../images/binGreen.svg';
+import redIconSVG from '../images/binRed.svg';
+
+
+const iconGreen = new L.Icon({
+	iconUrl: greenIconSVG,
+	iconSize: new L.Point(30, 70),
+});
+
+const iconRed = new L.Icon({
+	iconUrl: redIconSVG,
+	iconSize: new L.Point(30, 70),
+});
 
 export default function SignOut({paginationState,getData}) {
 	const defaultPosition = [50.4665284, 4.8661892];
@@ -21,6 +35,7 @@ export default function SignOut({paginationState,getData}) {
 					<Marker 
 						key={marker.id} 
 						position={[marker.position.coordinate_x,marker.position.coordinate_y]}
+						icon={marker.is_full ? iconRed : iconGreen}
 					>
 						<Popup>
 							Alerts : {marker.nb_alerts} <br/>
