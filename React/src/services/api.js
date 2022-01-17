@@ -1,4 +1,6 @@
 import axios from 'axios';
+import jwt_decode from 'jwt-decode';
+
 
 const API_URL = 'http://localhost:3001';
 const token = sessionStorage.getItem('token');
@@ -16,6 +18,9 @@ const login = async (email, password) => {
 		});
 		const token = rep.data;
 		sessionStorage.setItem('token', token);
+		const decoded = token == null ? null : jwt_decode(token);
+		const status = decoded == null ? null : decoded.status;
+		sessionStorage.setItem('status',status);
 		return token != null;
 	} catch (e) {
 		switch (e.response.status) {

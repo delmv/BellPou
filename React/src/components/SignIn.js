@@ -25,7 +25,7 @@ function isEmailValid(email) {
 
 const theme = createTheme();
 
-export default function SignIn(props) {
+export default function SignIn({login,redirection}) {
 	const [user, setUser] = React.useState(null);
 	const { enqueueSnackbar } = useSnackbar();
 
@@ -37,7 +37,9 @@ export default function SignIn(props) {
 
 		if (email && password && isEmailValid(email)) {
 			try {
-				setUser(await props.login(email, password));
+				setUser(await login(email, password));
+				if(sessionStorage.getItem('status') != 'manager')
+					throw new Error('You must be a manager');
 				enqueueSnackbar('Login successful', {variant: 'success'});
 			} catch (e) {
 				enqueueSnackbar(e.message, {variant: 'error'});
@@ -53,7 +55,7 @@ export default function SignIn(props) {
 	return (
 		<ThemeProvider theme={theme}>
 			{user && (
-				<Navigate to={props.redirection} replace={true} />
+				<Navigate to={redirection} replace={true} />
 			)}
 			<Container component='main' maxWidth='xs'>
 				<CssBaseline />
