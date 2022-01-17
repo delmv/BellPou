@@ -65,7 +65,7 @@ let columns = [
 		valueGetter: (params) => params.row.position.coordinate_x,
 		flex: 1,
 		validation:(value) => {
-			let regex = /^\d+?.\d+$/;
+			let regex = /^\d+\.?\d*$/;
 			return regex.test(value);
 		}
 	},
@@ -77,7 +77,7 @@ let columns = [
 		valueGetter: (params) => params.row.position.coordinate_y,
 		flex: 1,
 		validation:(value) => {
-			let regex = /^\d+?.\d+$/;
+			let regex = /^\d+\.?\d*$/;
 			return regex.test(value);
 		}
 	},
