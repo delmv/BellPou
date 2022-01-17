@@ -28,9 +28,10 @@ let columns = [
 		field: 'nb_alerts',
 		headerName: 'nb alerts',
 		editable: true,
-		flex: 1, 
+		flex: 1,
 		validation:(value) => {
-			return !isNaN(value);
+			let regex = /^\d+$/;
+			return regex.test(value);
 		}
 		
 	},
@@ -38,14 +39,22 @@ let columns = [
 		field: 'qr_code',
 		headerName: 'qr Code',
 		editable: true,
-		flex: 1
+		flex: 1,
+		validation:(value) => {
+			let regex = /^\w{1,10}$/;
+			return regex.test(value);
+		}
 	},
 	{
 		field: 'last_empty',
 		headerName: 'last empty',
 		editable: true,
 		type: 'date',
-		flex: 1, 
+		flex: 1,
+		validation:(value) => {
+			let regex = /^\d{4}-\d{2}-\d{2}$/;
+			return regex.test(value);
+		}
 	},
 	{
 		field: 'coordinate_x',
@@ -55,7 +64,8 @@ let columns = [
 		valueGetter: (params) => params.row.position.coordinate_x,
 		flex: 1,
 		validation:(value) => {
-			return !isNaN(value);
+			let regex = /^\d+?.\d+$/;
+			return regex.test(value);
 		}
 	},
 	{
@@ -66,7 +76,8 @@ let columns = [
 		valueGetter: (params) => params.row.position.coordinate_y,
 		flex: 1,
 		validation:(value) => {
-			return !isNaN(value);
+			let regex = /^\d+?.\d+$/;
+			return regex.test(value);
 		}
 	},
 	{
@@ -126,17 +137,17 @@ export default function Trashs() {
 
 	const handleCreate = async (position) => {
 		const newTrash = { position };
-		if(formFields.every(x => x.validation(position[x.field]))){
+		if(formFields.every(x => x.validation ? x.validation(position[x.field]) : true)){
 			try{
 				await createData(PATH, newTrash);
 				await getData();
-				enqueueSnackbar('Ajout réussi', {variant: 'success'});
+				enqueueSnackbar('Create successful', {variant: 'success'});
 
 			}catch(e){
 				enqueueSnackbar(e.message, {variant: 'error'});
 			}
-		}	else{
-			enqueueSnackbar('fail', {variant: 'error'});
+		} else{
+			enqueueSnackbar('Bad input, try again', {variant: 'error'});
 
 		}	
 			

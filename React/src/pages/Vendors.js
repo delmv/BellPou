@@ -2,10 +2,13 @@ import * as React from 'react';
 
 import Table from '../components/Table';
 import { createData, deleteData, updateData, getDatas } from '../services/api';
+import {useSnackbar} from 'notistack';
+
+
 
 const PATH = '/vendor';
 
-const columns = [
+let columns = [
 	{
 		field: 'id',
 		headerName: 'ID',
@@ -16,7 +19,10 @@ const columns = [
 		headerName: 'Nom',
 		editable: true,
 		required: true,
-		flex: 1
+		flex: 1,
+		validation:(value) => {
+			return value !== '';
+		}
 
 	},
 	{
@@ -24,7 +30,10 @@ const columns = [
 		headerName: 'Name',
 		editable: true,
 		required: true,
-		flex: 1
+		flex: 1,
+		validation:(value) => {
+			return value !== '';
+		}
 
 	},
 	{
@@ -32,7 +41,10 @@ const columns = [
 		headerName: 'Description FR',
 		editable: true,
 		required: true,
-		flex: 1
+		flex: 1,
+		validation:(value) => {
+			return value !== '';
+		}
 
 	},
 	{
@@ -40,23 +52,34 @@ const columns = [
 		headerName: 'Description EN',
 		editable: true,
 		required: true,
-		flex: 1
+		flex: 1,
+		validation:(value) => {
+			return value !== '';
+		}
 	},
 	{
 		field: 'coordinate_x',
 		headerName: 'coordinate X',
 		required: true,
-		type: 'number',
+		editable: true,
 		valueGetter: (params) => params.row.position.coordinate_x,
-		flex: 1
+		flex: 1,
+		validation:(value) => {
+			let regex = /^\d+?.\d+$/;
+			return regex.test(value);
+		}
 	},
 	{
 		field: 'coordinate_y',
 		headerName: 'coordinate Y',
 		required: true,
-		type: 'number',
+		editable: true,
 		valueGetter: (params) => params.row.position.coordinate_y,
-		flex: 1
+		flex: 1,
+		validation:(value) => {
+			let regex = /^\d+?.\d+$/;
+			return regex.test(value);
+		}
 	},
 
 	{
@@ -71,6 +94,16 @@ const columns = [
 
 const formFields = columns.filter(x => x.required);
 
+columns = columns.map((column) => {
+	if (column.validation) {
+		column.preProcessEditCellProps = (params) => {
+			const isValid = column.validation(params.props.value);
+			return { ...params.props, error: !isValid };
+		};
+	}
+	return column;
+});
+
 const initState = {
 	id: null,
 	name_fr: '',
@@ -82,6 +115,7 @@ const initState = {
 };
 
 export default function Vendors() {
+	const { enqueueSnackbar } = useSnackbar();
 	const [paginationState, setPaginationState] = React.useState({
 		page: 0,
 		pageSize: 100,
@@ -108,9 +142,16 @@ export default function Vendors() {
 	};
 
 	const handleCreate = async (vendor) => {
-		console.log(vendor);
-		await createData(PATH, { ...vendor, position: { coordinate_x: vendor.coordinate_x, coordinate_y: vendor.coordinate_y }});
-		await getData();
+		if(formFields.every(x => x.validation ? x.validation(vendor[x.field]) : true)) {
+			try {
+				await createData(PATH, { ...vendor, position: { coordinate_x: vendor.coordinate_x, coordinate_y: vendor.coordinate_y }});
+				await getData();
+				enqueueSnackbar('Create successful', {variant: 'success'});
+			} catch(e){
+				enqueueSnackbar(e.message, {variant: 'error'});
+			}
+		} else
+			enqueueSnackbar('Bad input, try again', {variant: 'error'});
 	};
 	const handleEdit = React.useCallback(
 		async (params) => {
@@ -120,8 +161,10 @@ export default function Vendors() {
 					[params.field]: params.value,
 				});
 
-				await getData();
+				enqueueSnackbar('Modification réussie', {variant: 'success'});
 			} catch (error) {
+				enqueueSnackbar(error.message, {variant: 'error'});
+			} finally {
 				await getData();
 			}
 		},
