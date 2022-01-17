@@ -11,7 +11,7 @@ const routes = [
 	{ label: 'SignOut', path: '/SignOut' },
 ];
 
-export function Navigation() {
+export default function Navigation() {
 	const [value, setValue] = useState(0);
 	const location = useLocation();
 
