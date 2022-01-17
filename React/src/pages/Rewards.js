@@ -2,9 +2,10 @@ import * as React from 'react';
 
 import Table from '../components/Table';
 import { createData, deleteData, updateData, getDatas } from '../services/api';
+import {useSnackbar} from 'notistack';
 
 const PATH = '/reward';
-const columns = [
+let columns = [
 	{
 		field: 'id',
 		headerName: 'ID',
@@ -15,14 +16,20 @@ const columns = [
 		headerName: 'Nom',
 		editable: true,
 		required: true,
-		flex: 1
+		flex: 1,
+		validation:(value) => {
+			return value !== '';
+		}
 	},
 	{
 		field: 'name_en',
 		headerName: 'Name',
 		editable: true,
 		required: true,
-		flex: 1
+		flex: 1,
+		validation:(value) => {
+			return value !== '';
+		}
 
 	},
 	{
@@ -30,7 +37,10 @@ const columns = [
 		headerName: 'Description FR',
 		editable: true,
 		required: true,
-		flex: 1
+		flex: 1,
+		validation:(value) => {
+			return value !== '';
+		}
 
 	},
 	{
@@ -38,7 +48,10 @@ const columns = [
 		headerName: 'Description EN',
 		editable: true,
 		required: true,
-		flex: 1
+		flex: 1,
+		validation:(value) => {
+			return value !== '';
+		}
 
 	},
 	{
@@ -47,7 +60,11 @@ const columns = [
 		editable: true,
 		required: true,
 		type:'number',
-		flex: 1
+		flex: 1,
+		validation:(value) => {
+			let regex = /^\d+.\d*$/;
+			return regex.test(value);
+		}
 
 	},
 	{
@@ -56,7 +73,11 @@ const columns = [
 		editable: true,
 		required: true,
 		type:'number',
-		flex: 1
+		flex: 1,
+		validation:(value) => {
+			let regex = /^\d+.\d*$/;
+			return regex.test(value);
+		}
 
 
 	},
@@ -66,7 +87,11 @@ const columns = [
 		editable: false,
 		required: true,
 		type:'number',
-		flex: 1
+		flex: 1,
+		validation:(value) => {
+			let regex = /^\d+$/;
+			return regex.test(value);
+		}
 		
 	}
 ];
@@ -84,7 +109,18 @@ const initState = {
 
 const formFields = columns.filter(x => x.required);
 
+columns = columns.map((column) => {
+	if (column.validation) {
+		column.preProcessEditCellProps = (params) => {
+			const isValid = column.validation(params.props.value);
+			return { ...params.props, error: !isValid };
+		};
+	}
+	return column;
+});
+
 export default function Users() {
+	const { enqueueSnackbar } = useSnackbar();
 	const [paginationState, setPaginationState] = React.useState({
 		page: 0,
 		pageSize: 100,
@@ -111,17 +147,31 @@ export default function Users() {
 	};
 
 	const handleCreate = async (reward) => {
-		console.log(reward);
-		await createData(PATH, { 
-			reward_name_fr: reward.name_fr,
-			reward_name_en: reward.name_en,
-			reward_description_fr: reward.description_fr,
-			reward_description_en: reward.description_en,
-			throins_cost: reward.throins_cost,
-			real_cost: reward.real_cost,
-			vendor: {id: reward.vendor_id}
-		});
-		await getData();
+
+		if(formFields.every(x => x.validation ? x.validation(reward[x.field]) : true)) {
+			try {
+				await createData(PATH, {
+					reward_name_fr: reward.name_fr,
+					reward_name_en: reward.name_en,
+					reward_description_fr: reward.description_fr,
+					reward_description_en: reward.description_en,
+					throins_cost: reward.throins_cost,
+					real_cost: reward.real_cost,
+					vendor: {id: reward.vendor_id}
+				});
+
+				await getData();
+
+				enqueueSnackbar('Create successful', {variant: 'success'});
+			} catch(e){
+				enqueueSnackbar(e.message, {variant: 'error'});
+			}
+		} else
+			enqueueSnackbar('Bad input, try again', {variant: 'error'});
+
+
+
+
 	};
 	const handleEdit = React.useCallback(
 		async (params) => {
@@ -131,8 +181,10 @@ export default function Users() {
 					[params.field]: params.value,
 				});
 
-				await getData();
+				enqueueSnackbar('Modification réussie', {variant: 'success'});
 			} catch (error) {
+				enqueueSnackbar(error.message, {variant: 'error'});
+			} finally {
 				await getData();
 			}
 		},

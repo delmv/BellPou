@@ -27,7 +27,7 @@ const Create = ({ initState, formFields, createData }) => {
 			>
 				{formFields.map(f => (
 					<TextField
-						error={!(f.validation(item[f.field]))}
+						error={f.validation ? !f.validation(item[f.field]) : false}
 						size='small'
 						margin='normal'
 						required

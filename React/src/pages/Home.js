@@ -13,17 +13,17 @@ const columns = [
 	{
 		field: 'is_full',
 		headerName: 'is full',
-		editable: true
+		editable: false
 	},
 	{
 		field: 'nb_alerts',
 		headerName: 'nb alerts',
-		editable: true,
+		editable: false,
 	},
 	{
 		field: 'qr_code',
 		headerName: 'qr Code',
-		editable: true,
+		editable: false,
 	},
 	{
 		field: 'last_empty',

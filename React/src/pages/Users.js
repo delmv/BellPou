@@ -2,10 +2,11 @@ import * as React from 'react';
 
 import Table from '../components/Table';
 import { createData, deleteData, updateData, getDatas } from '../services/api';
+import {useSnackbar} from 'notistack';
 
 const PATH = '/client';
 
-const columns = [
+let columns = [
 	{
 		field: 'id',
 		headerName: 'ID',
@@ -16,14 +17,20 @@ const columns = [
 		headerName: 'First Name',
 		editable: true,
 		required: true,
-		flex: 1
+		flex: 1,
+		validation:(value) => {
+			return value !== '';
+		}
 	},
 	{
 		field: 'last_name',
 		headerName: 'Last Name',
 		editable: true,
 		required: true,
-		flex: 1
+		flex: 1,
+		validation:(value) => {
+			return value !== '';
+		}
 	},
 	{
 		field: 'birth_date',
@@ -31,14 +38,22 @@ const columns = [
 		editable: true,
 		type: 'date',
 		required: true,
-		flex: 1
+		flex: 1,
+		validation:(value) => {
+			let regex = /\d{4}-\d{2}-\d{2}/;
+			return regex.test(value);
+		}
 
 	},
 	{
 		field: 'nb_throins',
 		headerName: 'Nb Throins',
 		editable: true,
-		flex: 1
+		flex: 1,
+		validation:(value) => {
+			let regex = /^\d+.\d*$/;
+			return regex.test(value);
+		}
 	},
 	{
 		field: 'email',
@@ -46,19 +61,31 @@ const columns = [
 		editable: true,
 		type: 'email',
 		required: true,
-		flex: 1
+		flex: 1,
+		validation:(value) => {
+			let regex = /.+@.+\..+/;
+			return regex.test(value);
+		}
 	},
 	{
 		field: 'nb_bad_reports',
 		headerName: 'Nb Bad Reports',
 		editable: true,
-		flex: 1
+		flex: 1,
+		validation:(value) => {
+			let regex = /^\d+$/;
+			return regex.test(value);
+		}
 
 	},
 	{
 		field: 'is_banned',
 		headerName: 'Is Banned',
-		flex: 1
+		editable: true,
+		flex: 1,
+		validation: (value) => {
+			return value === 'true' || value === 'false';
+		}
 	},
 
 ];
@@ -72,15 +99,31 @@ const initState = {
 	password: ''
 };
 
+columns = columns.map((column) => {
+	if (column.validation) {
+		column.preProcessEditCellProps = (params) => {
+			const isValid = column.validation(params.props.value);
+			return { ...params.props, error: !isValid };
+		};
+	}
+	return column;
+});
+
 const formFields = columns.filter(x => x.required);
+
+
 
 formFields.push({
 	field: 'password',
 	headerName: 'Password',
-	type: 'password'
+	type: 'password',
+	validation:(value) => {
+		return value !== '';
+	}
 });
 
 export default function Users() {
+	const { enqueueSnackbar } = useSnackbar();
 	const [paginationState, setPaginationState] = React.useState({
 		page: 0,
 		pageSize: 100,
@@ -108,8 +151,19 @@ export default function Users() {
 
 	const handleCreate = async (user) => {
 		console.log(user);
-		await createData(PATH, user);
-		await getData();
+		if(formFields.every(x => x.validation ? x.validation(user[x.field]) : true)) {
+			try {
+				await createData(PATH, user);
+				await getData();
+				enqueueSnackbar('Create successful', {variant: 'success'});
+			} catch (e) {
+				enqueueSnackbar(e.message, {variant: 'error'});
+			}
+		} else
+			enqueueSnackbar('Bad input, try again', {variant: 'error'});
+
+
+
 	};
 	const handleEdit = React.useCallback(
 		async (params) => {
@@ -119,8 +173,10 @@ export default function Users() {
 					[params.field]: params.value,
 				});
 
-				await getData();
+				enqueueSnackbar('Modification réussie', {variant: 'success'});
 			} catch (error) {
+				enqueueSnackbar(error.message, {variant: 'error'});
+			} finally {
 				await getData();
 			}
 		},
