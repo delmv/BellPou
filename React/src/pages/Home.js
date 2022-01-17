@@ -5,6 +5,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { getDatas, emptyTrash } from '../services/api';
 import Table from '../components/Table';
 import TrashMap from '../components/TrashMap';
+import {useSnackbar} from 'notistack';
+
 const columns = [
 	{
 		field: 'id',
@@ -54,6 +56,7 @@ const columns = [
 ];
 
 export default function Trash() {
+	const { enqueueSnackbar } = useSnackbar();
 	const [paginationState, setPaginationState] = React.useState({
 		page: 0,
 		pageSize: 5,
@@ -69,10 +72,9 @@ export default function Trash() {
 		setPaginationState(prev => ({ ...prev, loading: true }));
 		try {
 			const result = await getDatas('/trash', paginationState.pageSize, paginationState.page);
-			console.debug(result);
 			setPaginationState((prev) => ({ ...prev, rows: result.items, rowCount: result.totalItems }));
 		} catch(error) {
-			console.log(error);
+			enqueueSnackbar(error.message, {variant: 'error'});
 		}
 		finally {
 			setPaginationState(prev => ({ ...prev, loading: false }));
@@ -87,7 +89,7 @@ export default function Trash() {
 			await emptyTrash(id, isFull);
 			await getData();
 		} catch (error) {
-			console.log(error);
+			enqueueSnackbar(error.message, {variant: 'error'});
 		}
 	};
 
