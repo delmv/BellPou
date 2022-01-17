@@ -149,17 +149,39 @@ VALUES('Peluche BellPou', 'Bellpou plush', 'Une édition collector de la peluche
 INSERT INTO trash(position_id, qr_code)
 VALUES(1, 'aaaaaaaaa');
 
-INSERT INTO trash(position_id, qr_code)
-VALUES(2, 'aaaaaaaab');
+INSERT INTO trash(position_id, qr_code,is_full,nb_alerts,last_empty)
+VALUES(2, 'aaaaaaaab',true,3,'2022-01-17');
 
-INSERT INTO trash(position_id, qr_code)
-VALUES(3, 'aaaaaaaac');
+INSERT INTO trash(position_id, qr_code,is_full,nb_alerts,last_empty)
+VALUES(3, 'aaaaaaaac',false,1,'2022-01-15');
 
-INSERT INTO trash(position_id, qr_code)
-VALUES(4, 'aaaaaaaad');
+INSERT INTO trash(position_id, qr_code,is_full,nb_alerts,last_empty)
+VALUES(4, 'aaaaaaaad',true,3,'2022-01-17');
 
 INSERT INTO trash(position_id, qr_code)
 VALUES(5, 'aaaaaaae');
 
 INSERT INTO trash(position_id, qr_code)
 VALUES(6, 'aaaaaaaaf');
+
+insert into report(trash, client)
+values(2,1);
+
+insert into report(trash, client)
+values(2,2);
+
+insert into report(trash, client)
+values(2,3);
+
+insert into report(trash, client)
+values(3,1);
+
+insert into report(trash, client)
+values(4,1);
+
+insert into report(trash, client)
+values(4,2);
+
+insert into report(trash, client)
+values(4,3);
+
