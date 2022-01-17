@@ -19,13 +19,10 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-export default function SignOut({logout, redirection}) {
-	const [isLogedOut,setIsLogedOut]= React.useState(false);
+export default function SignOut({logout, redirection,isLogedOut}) {
 	const handleClick = async (event) => {
 		event.preventDefault();
-		logout();
-		setIsLogedOut(true);
-        
+		logout();       
 	};
 
 	return (

@@ -3,7 +3,6 @@ import { Navigate } from 'react-router-dom';
 import { Avatar, Button, CssBaseline, TextField, Link, Box, Typography, Container } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import {useSnackbar} from 'notistack';
 
 function Copyright(props) {
 	return (
@@ -18,38 +17,17 @@ function Copyright(props) {
 	);
 }
 
-function isEmailValid(email) {
-	const regex = new RegExp('.+@.+\\..+');
-	return regex.test(email);
-}
-
 const theme = createTheme();
 
-export default function SignIn({login,redirection}) {
-	const [user, setUser] = React.useState(null);
-	const { enqueueSnackbar } = useSnackbar();
+export default function SignIn({login,redirection,user}) {
+	
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		const data = new FormData(event.currentTarget);
 		const email = data.get('email');
 		const password = data.get('password');
-
-		if (email && password && isEmailValid(email)) {
-			try {
-				setUser(await login(email, password));
-				if(sessionStorage.getItem('status') != 'manager')
-					throw new Error('You must be a manager');
-				enqueueSnackbar('Login successful', {variant: 'success'});
-			} catch (e) {
-				enqueueSnackbar(e.message, {variant: 'error'});
-			}
-		} else {
-			if (!isEmailValid(email))
-				enqueueSnackbar('L\'email n\'est pas valide', {variant: 'error'});
-			else
-				enqueueSnackbar('L\'email et le mot de passe sont obligatoires', {variant: 'error'});
-		}
+		login(email, password);
 	};
 
 	return (

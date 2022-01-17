@@ -49,3 +49,4 @@ const Create = ({ initState, formFields, createData }) => {
 };
 
 export default Create;
+

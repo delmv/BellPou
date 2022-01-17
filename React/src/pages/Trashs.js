@@ -53,7 +53,7 @@ let columns = [
 		flex: 1,
 		validation:(value) => {
 			let regex = /^\d{4}-\d{2}-\d{2}$/;
-			return regex.test(value);
+			return value == '' || regex.test(value);
 		}
 	},
 	{
