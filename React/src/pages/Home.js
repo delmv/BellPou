@@ -4,7 +4,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 import { getDatas, emptyTrash } from '../services/api';
 import Table from '../components/Table';
-
+import TrashMap from '../components/TrashMap';
 const columns = [
 	{
 		field: 'id',
@@ -79,6 +79,8 @@ export default function Trash() {
 		}
 	};
 
+
+
 	const handleEmpty = async (event, cellValues,isFull) => {
 		const id = cellValues.row.id;
 		try {
@@ -124,6 +126,9 @@ export default function Trash() {
 		}];
 
 	return (
-		<Table columns={columnsToDisplay} getData={getData} paginationState={paginationState} setPage={setPage} setPageSize={setPageSize} />
+		<div>
+			<Table columns={columnsToDisplay} getData={getData} paginationState={paginationState} setPage={setPage} setPageSize={setPageSize} />
+			<TrashMap paginationState={paginationState} getData={getData}/>
+		</div>
 	);
 }
