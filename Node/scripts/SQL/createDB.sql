@@ -164,24 +164,3 @@ VALUES(5, 'aaaaaaae');
 INSERT INTO trash(position_id, qr_code)
 VALUES(6, 'aaaaaaaaf');
 
-insert into report(trash, client)
-values(2,1);
-
-insert into report(trash, client)
-values(2,2);
-
-insert into report(trash, client)
-values(2,3);
-
-insert into report(trash, client)
-values(3,1);
-
-insert into report(trash, client)
-values(4,1);
-
-insert into report(trash, client)
-values(4,2);
-
-insert into report(trash, client)
-values(4,3);
-
