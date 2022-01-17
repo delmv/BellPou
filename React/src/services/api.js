@@ -3,9 +3,11 @@ import jwt_decode from 'jwt-decode';
 
 
 const API_URL = 'http://localhost:3001';
-
+const token = sessionStorage.getItem('token');
 let instance =  axios.create({
 	baseURL: API_URL,
+	headers: {'Authorization': 'Bearer '+ token}
+
 });
 
 const login = async (email, password) => {
@@ -24,7 +26,7 @@ const login = async (email, password) => {
 			baseURL: API_URL,
 			headers: {'Authorization': 'Bearer '+ token}
 		});
-		
+
 		return token != null;
 	} catch (e) {
 		switch (e.response.status) {

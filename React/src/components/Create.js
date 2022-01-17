@@ -25,7 +25,7 @@ const Create = ({ initState, formFields, createData }) => {
 				noValidate
 				sx={{ mt: 1 }}
 			>
-				{formFields.map(f => (
+				{formFields.foreach(f => (
 					<TextField
 						error={f.validation ? !f.validation(item[f.field]) : false}
 						size='small'

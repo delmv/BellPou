@@ -16,7 +16,7 @@ const iconRed = new L.Icon({
 	iconSize: new L.Point(30, 70),
 });
 
-export default function SignOut({paginationState,getData}) {
+export default function TrashMap({paginationState,getData}) {
 	const defaultPosition = [50.4665284, 4.8661892];
 	React.useEffect(() => {
 		getData();

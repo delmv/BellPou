@@ -260,6 +260,7 @@ module.exports.destroy = async (req, res) => {
     const { id } = req.body;
     try {
       await Trash.destroy({ where: { id } });
+      await Report.destroy({ where: { trash:id } });
       res.sendStatus(204);
     } catch (error) {
       console.error(error);
