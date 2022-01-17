@@ -12,7 +12,8 @@ let columns = [
 		headerName: 'ID',
 		flex: 1,
 		validation:(value) => {
-			return !isNaN(value);
+			let regex = /^\d+$/;
+			return regex.test(value);
 		}
 	},
 	{

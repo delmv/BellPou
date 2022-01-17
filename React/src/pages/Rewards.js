@@ -62,7 +62,7 @@ let columns = [
 		type:'number',
 		flex: 1,
 		validation:(value) => {
-			let regex = /^\d+.\d*$/;
+			let regex = /^\d+\.?\d*$/;
 			return regex.test(value);
 		}
 
@@ -75,7 +75,7 @@ let columns = [
 		type:'number',
 		flex: 1,
 		validation:(value) => {
-			let regex = /^\d+.\d*$/;
+			let regex = /^\d+\.?\d*$/;
 			return regex.test(value);
 		}
 
