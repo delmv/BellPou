@@ -88,6 +88,8 @@ export default function Trash() {
 		try {
 			await emptyTrash(id, isFull);
 			await getData();
+			enqueueSnackbar('trash actualisée', {variant: 'success'});
+
 		} catch (error) {
 			enqueueSnackbar(error.message, {variant: 'error'});
 		}
